@@ -1,20 +1,12 @@
 package com.myProject.entity;
 
-import java.sql.Timestamp;
-import java.util.Date;
 
 public class weather {
     private Integer id;
     private String city;
-    private Timestamp saveTime;
+    private String saveTime;
     private airData airData;
 
-    public weather(Integer id, String city, Timestamp saveTime, com.myProject.entity.airData airData) {
-        this.id = id;
-        this.city = city;
-        this.saveTime = saveTime;
-        this.airData = airData;
-    }
 
     public Integer getId() {
         return id;
@@ -32,19 +24,19 @@ public class weather {
         this.city = city;
     }
 
-    public Date getSaveTime() {
+    public String getSaveTime() {
         return saveTime;
     }
 
-    public void setSaveTime(Timestamp saveTime) {
+    public void setSaveTime(String saveTime) {
         this.saveTime = saveTime;
     }
 
-    public com.myProject.entity.airData getAirData() {
+    public airData getAirData() {
         return airData;
     }
 
-    public void setAirData(com.myProject.entity.airData airData) {
+    public void setAirData(airData airData) {
         this.airData = airData;
     }
 }

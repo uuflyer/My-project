@@ -17,8 +17,9 @@ public class searchAirDataService {
     }
 
     public List<weather> getAirData() {
-        return dataDao.getDataFromDB();
 
+        System.out.println("s");
+        return dataDao.getDataFromDB();
 
     }
 }

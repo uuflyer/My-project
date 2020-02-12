@@ -15,10 +15,29 @@
                o3        as O3
         from airdata
     </select>
-
-
+    <select id="getUserByUsername" resultMap="myUser" parameterType="String">
+        select *
+        from user
+        where username = #{username}
+    </select>
+    <select id="getUserByTel" resultMap="myUser" parameterType="String">
+        select *
+        from user
+        where tel = #{tel}
+    </select>
+    <insert id="insertUserInfo" parameterType="User" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO user(username, encrypted_password, tel, mail)
+        VALUES (#{username}, #{encryptedpassword}, #{tel}, #{mail})
+    </insert>
+    <resultMap id="myUser" type="User">
+        <id column="id" property="id"/>
+        <result column="tel" property="tel"/>
+        <result column="username" property="username"/>
+        <result column="encrypted_password" property="encryptedpassword"/>
+        <result column="mail" property="mail"/>
+    </resultMap>
     <resultMap type="weather" id="myWeather">
-        <result column="id" property="id"/>
+        <id column="id" property="id"/>
         <result column="city" property="city"/>
         <result column="saveTime" property="saveTime"/>
         <association property="airData" javaType="com.myProject.entity.airData">

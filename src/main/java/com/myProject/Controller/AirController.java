@@ -10,16 +10,16 @@ import java.util.List;
 
 @RestController
 public class AirController {
-    private searchAirDataService searchAirDataService;
+//    private searchAirDataService searchAirDataService;
+//
+//    @Inject
+//    public AirController(com.myProject.Services.searchAirDataService searchAirDataService) {
+//        this.searchAirDataService = searchAirDataService;
+//    }
 
-    @Inject
-    public AirController(com.myProject.Services.searchAirDataService searchAirDataService) {
-        this.searchAirDataService = searchAirDataService;
-    }
-
-    @RequestMapping("/")
-    public List<weather> index() {
-        return searchAirDataService.getAirData();
-
-    }
+//    @RequestMapping("/")
+//    public List<weather> index() {
+//        return searchAirDataService.getAirData();
+//
+//    }
 }
