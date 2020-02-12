@@ -7,7 +7,8 @@
 ----
 
 GitHub 地址：https://github.com/uuflyer/My-project
-博客教程地址: https://github.io.uuflyer
+博客教程地址: https://uuflyer.github.io
+
 ### (一) 第一部分
 
 这个项目是以物联网管理系统为例，主要帮助大家能够理解一下内容:
