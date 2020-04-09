@@ -2,6 +2,7 @@ package com.myProject.Services;
 
 import com.myProject.entity.User;
 import com.myProject.DAO.UserDao;
+import com.myProject.entity.UserResult;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -35,6 +36,10 @@ public class UserService implements UserDetailsService {
         return userDao.getUserByUsername(username);
     }
 
+    public UserResult getUserInfoByUsername(String username) {
+        return UserResult.success(getUserByUsername(username), "获取成功");
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = getUserByUsername(username);
@@ -46,5 +51,14 @@ public class UserService implements UserDetailsService {
 
     public User getUserByTel(String tel) {
         return userDao.getUserByTel(tel);
+    }
+
+    public UserResult updateUserInfo(User updateUser) {
+        User userInDB = getUserByUsername(updateUser.getUsername());
+        if (userInDB == null) {
+            return UserResult.failure("用户不存在");
+
+        }
+        return UserResult.success(userDao.updateUserInfo(updateUser), "更新成功");
     }
 }

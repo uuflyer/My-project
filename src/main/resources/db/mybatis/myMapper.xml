@@ -5,16 +5,6 @@
 <mapper namespace="myMapper">
 
 
-    <select id="selectAllData" resultMap="myWeather">
-        select id,
-               city,
-               save_time as saveTime,
-               pm2_5     as PM2_5,
-               pm10      as PM10,
-               no2       as NO2,
-               o3        as O3
-        from airdata
-    </select>
     <select id="getUserByUsername" resultMap="myUser" parameterType="String">
         select *
         from user
@@ -29,23 +19,25 @@
         INSERT INTO user(username, encrypted_password, tel, mail)
         VALUES (#{username}, #{encryptedpassword}, #{tel}, #{mail})
     </insert>
+
+    <update id="updateUserInfo" parameterType="User" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        update user
+        set tel         = #{tel},
+            mail        = #{mail},
+            IpAddress   = #{IpAddress},
+            HomeAddress = #{HomeAddress}
+        where id = #{id}
+
+    </update>
     <resultMap id="myUser" type="User">
         <id column="id" property="id"/>
         <result column="tel" property="tel"/>
         <result column="username" property="username"/>
         <result column="encrypted_password" property="encryptedpassword"/>
         <result column="mail" property="mail"/>
-    </resultMap>
-    <resultMap type="weather" id="myWeather">
-        <id column="id" property="id"/>
-        <result column="city" property="city"/>
-        <result column="saveTime" property="saveTime"/>
-        <association property="airData" javaType="com.myProject.entity.airData">
-            <result column="PM2_5" property="PM2_5"/>
-            <result column="PM10" property="PM10"/>
-            <result column="NO2" property="NO2"/>
-            <result column="O3" property="O3"/>
-        </association>
+        <result column="userType" property="userType"/>
+        <result column="IpAddress" property="IpAddress"/>
+        <result column="HomeAddress" property="HomeAddress"/>
     </resultMap>
 
 

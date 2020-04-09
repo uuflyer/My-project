@@ -1,6 +1,7 @@
 package com.myProject.DAO;
 
 import com.myProject.entity.User;
+import com.myProject.entity.UserResult;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,11 @@ public class UserDao {
     @Inject
     public UserDao(SqlSession sqlSession) {
         this.sqlSession = sqlSession;
+    }
+
+    public User updateUserInfo(User updateUser) {
+        sqlSession.update("updateUserInfo", updateUser);
+        return selectUserById(updateUser.getId());
     }
 
     private Map<String, Object> asMap(Object... args) {
@@ -42,4 +48,5 @@ public class UserDao {
     public void save(User user) {
         sqlSession.insert("insertUserInfo", user);
     }
+
 }

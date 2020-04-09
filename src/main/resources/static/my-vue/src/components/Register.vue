@@ -1,6 +1,6 @@
 <template>
-  <body id="poster">
-  <div>
+  <body>
+  <div id="poster">
     <div class="register-wrapper">
       <div id="register">
         <p class="title">手机号注册</p>
@@ -15,6 +15,9 @@
           <el-form-item prop="tel">
             <el-input v-model="ruleForm2.tel" auto-complete="off" placeholder="请输入手机号"></el-input>
           </el-form-item>
+          <el-form-item prop="username">
+            <el-input v-model="ruleForm2.username" placeholder="请输入用户名"></el-input>
+          </el-form-item>
           <el-form-item prop="smscode" class="code">
             <el-input v-model="ruleForm2.smscode" placeholder="验证码"></el-input>
             <el-button type="primary" :disabled='isDisabled' @click="sendCode">{{buttonText}}</el-button>
@@ -28,7 +31,7 @@
                       clearable></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm2')" style="width:100%;">注册</el-button>
+            <el-button type="primary" @click="submitForm(ruleForm2)" style="width:100%;">注册</el-button>
             <p class="login" @click="gotoLogin">已有账号？立即登录</p>
           </el-form-item>
         </el-form>
@@ -38,129 +41,137 @@
   </body>
 </template>
 <script>
-    export default {
-        name: "Register",
-        data() {
-            // <!--验证手机号是否合法-->
-            let checkTel = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('请输入手机号码'))
-                } else if (!this.checkMobile(value)) {
-                    callback(new Error('手机号码不合法'))
-                } else {
-                    callback()
-                }
-            }
-            //  <!--验证码是否为空-->
-            let checkSmscode = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('请输入手机验证码'))
-                } else {
-                    callback()
-                }
-            }
-            // <!--验证密码-->
-            let validatePass = (rule, value, callback) => {
-                if (value === "") {
-                    callback(new Error("请输入密码"))
-                } else {
-                    if (this.ruleForm2.checkPass !== "") {
-                        this.$refs.ruleForm2.validateField("checkPass");
-                    }
-                    callback()
-                }
-            }
-            // <!--二次验证密码-->
-            let validatePass2 = (rule, value, callback) => {
-                if (value === "") {
-                    callback(new Error("请再次输入密码"));
-                } else if (value !== this.ruleForm2.password) {
-                    callback(new Error("两次输入密码不一致!"));
-                } else {
-                    callback();
-                }
-            };
-            return {
-                ruleForm2: {
-                    password: "",
-                    checkPass: "",
-                    tel: "",
-                    smscode: ""
-                },
-                rules2: {
-                    password: [{validator: validatePass, trigger: 'change'}],
-                    checkPass: [{validator: validatePass2, trigger: 'change'}],
-                    tel: [{validator: checkTel, trigger: 'change'}],
-                    smscode: [{validator: checkSmscode, trigger: 'change'}],
-                },
-                buttonText: '发送验证码',
-                isDisabled: false, // 是否禁止点击发送验证码按钮
-                flag: true
-            }
-        },
-        methods: {
-            // <!--发送验证码-->
-            sendCode() {
-                let tel = this.ruleForm2.tel
-                if (this.checkMobile(tel)) {
-                    console.log(tel)
-                    let time = 60
-                    this.buttonText = '已发送'
-                    this.isDisabled = true
-                    if (this.flag) {
-                        this.flag = false;
-                        let timer = setInterval(() => {
-                            time--;
-                            this.buttonText = time + ' 秒'
-                            if (time === 0) {
-                                clearInterval(timer);
-                                this.buttonText = '重新获取'
-                                this.isDisabled = false
-                                this.flag = true;
-                            }
-                        }, 1000)
-                    }
-                }
-            },
-            // <!--进入登录页-->
-            gotoLogin() {
-                this.$router.push({
-                    path: "/login"
-                });
-            }
-            ,
-            // <!--提交注册-->
-            submitForm(formName) {
-                this.$axios
-                    .post('/register',
-                        {
-                            password: this.ruleForm2.password,
-                            tel: this.ruleForm2.tel,
-                            smscode: this.ruleForm2.smscode
-                        })
-                    .then(successReponse => {
-                        if (successReponse.data.status === "OK") {
-                            alert(successReponse.data.msg);
-                            this.gotoLogin();
-                        } else {
-                            alert("注册失败:" + successReponse.data.msg);
-                        }
-                    })
-
-            },
-
-            // 验证手机号
-            checkMobile(str) {
-                let re = /^1\d{10}$/
-                if (re.test(str)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
+  export default {
+    name: "Register",
+    data() {
+      // <!--验证手机号是否合法-->
+      let checkTel = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入手机号码'))
+        } else if (!this.checkMobile(value)) {
+          callback(new Error('手机号码不合法'))
+        } else {
+          callback()
         }
+      }
+      //  <!--验证码是否为空-->
+      let checkSmscode = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入手机验证码'))
+        } else {
+          callback()
+        }
+      }
+      // <!--验证密码-->
+      let validatePass = (rule, value, callback) => {
+        if (value === "") {
+          callback(new Error("请输入密码"))
+        } else {
+          if (this.ruleForm2.checkPass !== "") {
+            this.$refs.ruleForm2.validateField("checkPass");
+          }
+          callback()
+        }
+      }
+      // <!--二次验证密码-->
+      let validatePass2 = (rule, value, callback) => {
+        if (value === "") {
+          callback(new Error("请再次输入密码"));
+        } else if (value !== this.ruleForm2.password) {
+          callback(new Error("两次输入密码不一致!"));
+        } else {
+          callback();
+        }
+      };
+      return {
+        ruleForm2: {
+          password: "",
+          checkPass: "",
+          tel: "",
+          smscode: "",
+          username: ""
+        },
+        rules2: {
+          password: [{validator: validatePass, trigger: 'change'}],
+          checkPass: [{validator: validatePass2, trigger: 'change'}],
+          tel: [{validator: checkTel, trigger: 'change'}],
+          smscode: [{validator: checkSmscode, trigger: 'change'}],
+        },
+        buttonText: '发送验证码',
+        isDisabled: false, // 是否禁止点击发送验证码按钮
+        flag: true
+      }
+    },
+    methods: {
+      // <!--发送验证码-->
+      sendCode() {
+        let tel = this.ruleForm2.tel
+        if (this.checkMobile(tel)) {
+          console.log(tel)
+          let time = 60
+          this.buttonText = '已发送'
+          this.isDisabled = true
+          if (this.flag) {
+            this.flag = false;
+            let timer = setInterval(() => {
+              time--;
+              this.buttonText = time + ' 秒'
+              if (time === 0) {
+                clearInterval(timer);
+                this.buttonText = '重新获取'
+                this.isDisabled = false
+                this.flag = true;
+              }
+            }, 1000)
+          }
+        }
+      },
+      // <!--进入登录页-->
+      gotoLogin() {
+        this.$router.push({
+          path: "/login"
+        });
+      }
+      ,
+      // <!--提交注册-->
+      submitForm(formName) {
+
+        this.$axios
+          .post('/auth/register',
+            {
+              password: formName.password,
+              tel: formName.tel,
+              smscode: formName.smscode,
+              username: formName.username
+            })
+          .then(successReponse => {
+            console.log('ok');
+            if (successReponse.data.status === "OK") {
+              alert(successReponse.data.msg);
+              this.gotoLogin();
+            } else {
+              alert(successReponse.data.msg)
+            }
+          })
+          .catch(() => {
+            alert('注册失败，网络资源问题')
+          })
+
+
+      },
+
+      // 验证手机号
+      checkMobile(str) {
+        let re = /^1\d{10}$/
+        if (re.test(str)) {
+          return true;
+        } else {
+          return false;
+        }
+      }
     }
-    ;
+  }
+  ;
 </script>
 
 <style scoped>
@@ -251,6 +262,7 @@
     width: 100%;
     background-size: cover;
     position: fixed;
+    overflow-y: auto;
   }
 
   body {

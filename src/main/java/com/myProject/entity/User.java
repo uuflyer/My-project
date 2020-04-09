@@ -9,6 +9,35 @@ public class User {
     private String encryptedpassword;
     private String tel;
     private String mail;
+    private String userType;
+    private String IpAddress;
+    private String HomeAddress;
+
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
+    public String getIpAddress() {
+        return IpAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        IpAddress = ipAddress;
+    }
+
+    public String getHomeAddress() {
+        return HomeAddress;
+    }
+
+    public void setHomeAddress(String homeAddress) {
+        HomeAddress = homeAddress;
+    }
+
 
     public int getId() {
         return id;
@@ -41,6 +70,7 @@ public class User {
     public void setTel(String tel) {
         this.tel = tel;
     }
+
 
     public String getMail() {
         return mail;

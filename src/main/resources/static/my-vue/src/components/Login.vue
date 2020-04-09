@@ -20,38 +20,47 @@
 </template>
 
 <script>
-    export default {
-        name: "Login",
-        data() {
-            return {
-                loginForm: {
-                    username: '',
-                    password: '',
-                },
-                responseResult: []
-            }
+
+  export default {
+    name: "Login",
+    data() {
+      return {
+        loginForm: {
+          username: '18200358328',
+          password: '123456',
         },
-        methods: {
-            login() {
-                this.$axios
-                    .post('/login', {
-                        username: this.loginForm.username,
-                        password: this.loginForm.password,
-                    })
-                    .then(successResponse => {
-                        if (successResponse.data.status === "OK") {
-                            this.$router.replace({path: '/index'})
-                        } else {
-                            alert(successResponse.data.msg);
-                        }
-                    })
-                    .catch(failResponse => {
+        responseResult: [],
+      }
+    },
+    methods: {
+      login() {
+        var _this = this
+        console.log(sessionStorage.getItem('username'))
+        this.$axios
+          .post('/auth/login', {
+            username: this.loginForm.username,
+            password: this.loginForm.password,
+          })
+          .then(successResponse => {
+            if (successResponse.data.status === "OK") {
+              console.log(successResponse.headers)
+              console.log(document.cookie.toString())
+              _this.$store.commit('login', successResponse.data.data)
+              var path = this.$route.query.redirect
+              console.log('query')
+              this.$router.replace({path: path === '/' || path === undefined ? '/home' : path})
 
-
-                    })
+            } else {
+              alert(successResponse.data.msg);
             }
-        }
+          })
+          .catch(() => {
+              alert('网络资源错误');
+            }
+          )
+      }
     }
+  }
 </script>
 
 <style scoped>
@@ -77,11 +86,11 @@
     background-position: center top;
     height: 100%;
     width: 100%;
+    margin: -8px -9px;
     background-size: cover;
     position: fixed;
+    overflow-y: auto;
   }
 
-  body {
-    margin: -10px -8px;
-  }
+
 </style>

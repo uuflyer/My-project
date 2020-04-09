@@ -21,6 +21,8 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+@CrossOrigin(allowCredentials = "true")
 @RestController
 public class AuthController {
     private UserService userService;
@@ -33,6 +35,7 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
     }
 
+    @CrossOrigin
     @RequestMapping("/auth")
     @ResponseBody
     public Result auth() {
@@ -74,7 +77,7 @@ public class AuthController {
             authenticationManager.authenticate(token);
             SecurityContextHolder.getContext().setAuthentication(token);
 
-            request.setAttribute("user", userDetails);
+            request.setAttribute("Authentication", userDetails);
 
             return LoginResult.successLogin("登录成功", userService.getUserByUsername(username));
         } catch (BadCredentialsException e) {
@@ -88,39 +91,36 @@ public class AuthController {
     public Result register(@RequestBody Map<String, Object> userInfo) {
         String password = userInfo.get("password").toString();
         String tel = userInfo.get("tel").toString();
+        String username = userInfo.get("username").toString();
+        if (userService.getUserByUsername(username) != null) {
+            return LoginResult.failure("用户名已存在");
+        }
 
-        String usernaem = getRandomUsername();
         if (password.length() < 6 || password.length() > 16) {
             return LoginResult.failure("密码只允许6-16个字符");
         }
         try {
-            userService.save(usernaem, password, tel, null);
+            userService.save(username, password, tel, null);
         } catch (DuplicateKeyException e) {
             return LoginResult.failure("该手机号已注册");
         }
         return LoginResult.successExecute("注册成功");
     }
 
+    @CrossOrigin
+    @GetMapping("/auth/logout")
+    @ResponseBody
+    public Result logout() {
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        User loggedInUser = userService.getUserByUsername(userName);
 
-    private String getRandomUsername() {
-        StringBuilder username = new StringBuilder();
-        StringBuilder charOrNum = new StringBuilder();
-        Random random = new Random();
-
-        for (int i = 0; i < 10; i++) {
-            charOrNum.replace(0, 4, random.nextInt(2) % 2 != 0 ? "num" : "char");
-            if ("char".equalsIgnoreCase(charOrNum.toString())) {
-                int temp = random.nextInt(2) % 2 == 0 ? 65 : 97;
-                username.append((char) (random.nextInt(26) + temp));
-            } else {
-                username.append(random.nextInt(10));
-            }
+        if (loggedInUser == null) {
+            return LoginResult.failure("用户尚未登录");
+        } else {
+            SecurityContextHolder.clearContext();
+            return LoginResult.successExecute("注销成功");
         }
-        User usernameInDb = userService.getUserByUsername(username.toString());
-
-        if (usernameInDb != null) {
-            getRandomUsername();
-        }
-        return username.toString();
     }
+
+
 }

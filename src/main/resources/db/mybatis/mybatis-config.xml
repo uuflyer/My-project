@@ -11,6 +11,7 @@
         <typeAlias alias="airData" type="com.myProject.entity.airData"/>
         <typeAlias alias="weather" type="com.myProject.entity.weather"/>
         <typeAlias alias="User" type="com.myProject.entity.User"/>
+        <typeAlias alias="Equip" type="com.myProject.entity.Equip"/>
     </typeAliases>
     <environments default="development">
         <environment id="development">
@@ -26,5 +27,6 @@
 
     <mappers>
         <mapper resource="db/mybatis/myMapper.xml"/>
+        <mapper resource="db/mybatis/EquipMapper.xml"/>
     </mappers>
 </configuration>
