@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Login from "../components/Login";
 import Register from "../components/Register";
 import Home from "../components/Home";
-import Appindex from "../components/home/Appindex";
+import Appindex from "../components/home/AppIndex.vue";
 import EquipmentsIndex from "../components/equipments/EquipmentsIndex";
 import EquipmentsGuide from "../components/equipments/EquipmentsGuide";
 import Equip from "../components/equipments/Equip";

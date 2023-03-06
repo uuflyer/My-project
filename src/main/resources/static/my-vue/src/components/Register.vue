@@ -3,7 +3,7 @@
   <div id="poster">
     <div class="register-wrapper">
       <div id="register">
-        <p class="title">手机号注册</p>
+        <p class="title">账号注册</p>
         <el-form
           :model="ruleForm2"
           status-icon
@@ -12,16 +12,16 @@
           label-width="0"
           class="demo-ruleForm"
         >
-          <el-form-item prop="tel">
+          <!-- <el-form-item prop="tel">
             <el-input v-model="ruleForm2.tel" auto-complete="off" placeholder="请输入手机号"></el-input>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item prop="username">
             <el-input v-model="ruleForm2.username" placeholder="请输入用户名"></el-input>
           </el-form-item>
-          <el-form-item prop="smscode" class="code">
+          <!-- <el-form-item prop="smscode" class="code">
             <el-input v-model="ruleForm2.smscode" placeholder="验证码"></el-input>
             <el-button type="primary" :disabled='isDisabled' @click="sendCode">{{buttonText}}</el-button>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item prop="pass">
             <el-input type="password" v-model="ruleForm2.password" auto-complete="off" placeholder="输入密码"
                       clearable></el-input>

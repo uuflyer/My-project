@@ -1,10 +1,13 @@
 <template>
-  <el-container>
+  <div>
+    <el-container>
     <nav-menu>
     </nav-menu>
 
-    <router-view/>
   </el-container>
+  <router-view/>
+  </div>
+ 
 
 
 </template>

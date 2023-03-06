@@ -26,7 +26,7 @@
     data() {
       return {
         loginForm: {
-          username: '18200358328',
+          username: 'admin',
           password: '123456',
         },
         responseResult: [],
@@ -34,30 +34,38 @@
     },
     methods: {
       login() {
-        var _this = this
-        console.log(sessionStorage.getItem('username'))
-        this.$axios
-          .post('/auth/login', {
-            username: this.loginForm.username,
-            password: this.loginForm.password,
-          })
-          .then(successResponse => {
-            if (successResponse.data.status === "OK") {
-              console.log(successResponse.headers)
-              console.log(document.cookie.toString())
-              _this.$store.commit('login', successResponse.data.data)
-              var path = this.$route.query.redirect
-              console.log('query')
-              this.$router.replace({path: path === '/' || path === undefined ? '/home' : path})
+        this.$store.commit('login',{
+          username: 'admin',
+          tel: '123',
+          id: '122'
+        });
+        this.$router.push('/home');
+        // this.$router.replace({path: path === '/' || path === undefined ? '/home' : path})
 
-            } else {
-              alert(successResponse.data.msg);
-            }
-          })
-          .catch(() => {
-              alert('网络资源错误');
-            }
-          )
+        // var _this = this
+        // console.log(sessionStorage.getItem('username'))
+        // this.$axios
+        //   .post('/auth/login', {
+        //     username: this.loginForm.username,
+        //     password: this.loginForm.password,
+        //   })
+        //   .then(successResponse => {
+        //     if (successResponse.data.status === "OK") {
+        //       console.log(successResponse.headers)
+        //       console.log(document.cookie.toString())
+        //       _this.$store.commit('login', successResponse.data.data)
+        //       var path = this.$route.query.redirect
+        //       console.log('query')
+        //       this.$router.replace({path: path === '/' || path === undefined ? '/home' : path})
+
+        //     } else {
+        //       alert(successResponse.data.msg);
+        //     }
+        //   })
+        //   .catch(() => {
+        //       alert('网络资源错误');
+        //     }
+        //   )
       }
     }
   }
