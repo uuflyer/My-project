@@ -6,6 +6,7 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import store from './store'
+import movieItem from '@/components/common/movieItem.vue'
 
 var axios = require('axios')
 axios.defaults.baseURL = "http://localhost:8443/"
@@ -15,7 +16,9 @@ Vue.prototype.$axios = axios
 Vue.config.productionTip = false
 /* eslint-disable no-new */
 
+Vue.component('movieItem', movieItem);
 Vue.use(ElementUI)
+
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth) {
@@ -24,7 +27,7 @@ router.beforeEach((to, from, next) => {
     } else {
       next({
         path: '/login',
-        query: {redirect: to.fullPath}
+        query: { redirect: to.fullPath }
       })
     }
   } else {
@@ -37,6 +40,6 @@ new Vue({
   render: h => h(App),
   router,
   store,
-  components: {App},
+  components: { App },
   template: '<App/>'
 })
