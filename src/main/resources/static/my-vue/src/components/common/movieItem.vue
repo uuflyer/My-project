@@ -4,15 +4,20 @@
         <!--     v-on:mouseover="isHover = true" 绑定鼠标的悬停和离开-->
         <div v-on:mouseover="isHover = true" v-on:mouseleave="isHover = false">
             <!-- 点击海报，进入该电影详细信息 -->
-            <a :href="movieInfoUrl">
-                <!--      this.global.base  :const base = 'http://127.0.0.1:8181/'(后端的接口)
-          movieItem.moviePoster:  /images/movie/2020/12/15/4425e22bc1264164a2fbdd01d56cd939.jpg   -->
+            <a href="javascript: void(0)" @click="dialogDisplay = true">
                 <img class="poster" :src="movieItem.url">
             </a>
+            <!--     显示电影下面的电影名字 -->
+            <div class="title-style">
+                <el-rate v-if="movieItem.rate > 0" v-model="movieItem.rate" disabled show-score text-color="#ff9900"
+                    score-template="{value}">
+                </el-rate>
+                <a href="javascript:void(0)" @click="dialogDisplay = true">{{ movieItem.name }}</a>
+            </div>
             <!-- 鼠标划过时的效果 -->
             <div class="movie-item-hover" v-if="isHover">
                 <!-- 海报 -->
-                <a :href="movieInfoUrl">
+                <a href="javascript: void(0)" @click="dialogDisplay = true">
                     <img class="poster-hover" :src="movieItem.url">
                     <!-- 鼠标划过时显示的信息 -->
                     <div class="movie-hover-info">
@@ -25,14 +30,55 @@
                         <div class="title-hover">
                             <span class="name-tags">上映时间: </span>{{ movieItem.releaseDate }}
                         </div>
+                        <div class="title-hover" v-if="movieItem.leader">
+                            <span class="name-tags">导演: </span>{{ movieItem.leader }}
+                        </div>
+                        <div class="title-hover" v-if="movieItem.country">
+                            <span class="name-tags">国家: </span>{{ movieItem.country }}
+                        </div>
                     </div>
                 </a>
             </div>
         </div>
-        <!--     显示电影下面的电影名字 -->
-        <div class="title-style">
-            <a href="/movieInfo">{{ movieItem.name }}</a>
-        </div>
+
+        <el-dialog center title="电影详情" append-to-body="true" :visible="dialogDisplay" width="60%"
+            :before-close="handleClose">
+            <el-row>
+                <el-col :span="12">
+                    <img :src="movieItem.url">
+                </el-col>
+                <el-col :span="12">
+                    <div class="movie-info">
+                        <span class="name-tags"><b>电影名称：{{ movieItem.name }}</b></span>
+                    </div>
+                    <div class="movie-info">
+                        <span class="name-tags">类型: </span>{{ movieItem.type }}
+                    </div>
+                    <div class="movie-info">
+                        <span class="name-tags">上映时间: </span>{{ movieItem.releaseDate }}
+                    </div>
+                    <div class="movie-info" v-if="movieItem.leader">
+                        <span class="name-tags">导演: </span>{{ movieItem.leader }}
+                    </div>
+                    <div class="movie-info" v-if="movieItem.country">
+                        <span class="name-tags">国家: </span>{{ movieItem.country }}
+                    </div>
+                    <div class="movie-info">
+                        <span class="name-tags">
+                            评分：
+                        </span>
+                        <el-rate allow-half v-model="movieItem.rate" show-score text-color="#ff9900"
+                            score-template="{value}"></el-rate>
+                    </div>
+
+
+                </el-col>
+            </el-row>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogDisplay = false">取 消</el-button>
+                <el-button type="primary" @click="dialogDisplay = false">保 存</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
   
@@ -45,22 +91,18 @@ export default {
     },
     data() {
         return {
+            dialogDisplay: false,
             isHover: false,
             movieInfoUrl: ''
         }
     },
     created() {
+        console.log('movieItem', this.movieItem);
         //解析上映的时间
         this.movieItem.releaseDate = moment(this.movieItem.releaseDate).format('YYYY-MM-DD')
-        //类型之间加/
-        this.movieItem.movieCategoryList = this.movieItem.movieCategoryList.map((obj, index) => {
-            return obj.movieCategoryName;
-        }).join("/")
-        console.log(this.movieItem.movieCategoryList)
         //赋值目标链接
         this.movieInfoUrl = '/movieInfo/' + this.movieItem.movieId
     },
-
     //监听器
     watch: {
         'movieItem'() {
@@ -70,16 +112,24 @@ export default {
 
             this.movieItem.url = this.movieItem.url
             this.movieItem.name = this.movieItem.name
+            this.movieItem.rate = this.movieItem.rate
             //  格式化时间
             this.movieItem.releaseDate = moment(this.movieItem.releaseDate).format('YYYY-MM-DD')
-            //  在每个类型之间，添加/,为了美观
-            this.movieItem.movieCategoryList = this.movieItem.movieCategoryList.map((obj, index) => {
-                return obj.movieCategoryName;
-            }).join("/")
 
             //赋值目标链接，用于跳转到这个电影的详细信息
-            this.movieInfoUrl = '/movieInfo/' + this.movieItem.movieId
+            this.movieInfoUrl = '/movieInfo/' + this.movieItem.name
         }
+    },
+
+    methods: {
+        handleClose(done) {
+            this.$confirm('确认关闭？')
+                .then(_ => {
+                    done();
+                })
+                .catch(_ => { });
+        }
+
     }
 }
 </script>
@@ -89,7 +139,7 @@ export default {
     margin-top: 30px;
     margin-left: 30px;
     display: inline-block;
-    vertical-align: top;
+    vertical-align: baseline;
     position: relative;
 }
 
@@ -101,12 +151,12 @@ export default {
 .title-style {
     width: 160px;
     white-space: nowrap;
-    overflow: hidden;
+    overflow: auto;
     text-overflow: ellipsis;
     text-align: center;
     font-size: 16px;
     color: #333;
-    margin-top: 10px;
+    margin-top: 5px;
 }
 
 .score {
@@ -123,11 +173,11 @@ a {
 .movie-item-hover {
     position: absolute;
     width: 218px;
-    height: 300px;
+    height: 330px;
     z-index: 10;
     top: -40px;
     left: -29px;
-    overflow: hidden;
+    overflow: auto;
     background: #fff;
     box-shadow: 0 0 16px #fff, 0 0 6px rgba(0, 0, 0, 0.2);
 }
@@ -147,6 +197,22 @@ a {
     background: #fff;
     width: 218px;
     color: #999;
+}
+
+.movie-info:first-child {
+    font-size: 30px;
+    line-height: 30px;
+    margin-top: 10%;
+}
+
+.movie-info {
+    font-size: 20px;
+    line-height: 20px;
+    margin-top: 10%;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .title-hover:first-child {

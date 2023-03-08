@@ -4,7 +4,7 @@ import Login from "../components/Login";
 import Register from "../components/Register";
 import Home from "../components/Home";
 import Appindex from "../components/home/AppIndex.vue";
-import EquipmentsIndex from "../components/equipments/EquipmentsIndex";
+import movieRate from "../components/common/movieRate";
 import EquipmentsGuide from "../components/equipments/EquipmentsGuide";
 import Equip from "../components/equipments/Equip";
 import UserInfo from "../components/user/UserSide";
@@ -28,29 +28,11 @@ export default new Router({
       name: 'Home',
       component: Home,
       redirect: '/index',
-      meta: {requireAuth: true},
+      meta: { requireAuth: true },
       children: [
-        {path: '/index', name: 'AppIndex', component: Appindex, meta: {requireAuth: true}},
+        { path: '/index', name: 'AppIndex', component: Appindex, meta: { requireAuth: true } },
         {
-          path: '/equipments', name: 'Equipments', component: EquipmentsIndex, meta: {requireAuth: true},
-          children: [
-            {
-              path: '/equipments/guide',
-              name: 'EquipmentsGuide',
-              component: EquipmentsGuide,
-              meta: {
-                requireAuth: true
-              }
-            },
-            {
-              path: '/equipments/equip',
-              name: 'Equip',
-              component: Equip,
-              meta: {
-                requireAuth: true
-              }
-            }
-          ]
+          path: '/movieRate', name: 'movieRate', component: movieRate, meta: { requireAuth: true },
         },
 
         {
@@ -65,13 +47,13 @@ export default new Router({
               path: '/userInfo/baseInfo',
               name: 'baseIfo',
               component: BaseInfo,
-              meta: {requireAuth: true}
+              meta: { requireAuth: true }
             },
             {
               path: '/userInfo/security',
               name: 'security',
               component: security,
-              meta: {requireAuth: true}
+              meta: { requireAuth: true }
             }
           ]
 
