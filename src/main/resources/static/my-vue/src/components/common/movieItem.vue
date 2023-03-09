@@ -41,7 +41,7 @@
             </div>
         </div>
 
-        <el-dialog center title="电影详情" append-to-body="true" :visible="dialogDisplay" width="60%"
+        <el-dialog center title="电影详情" :append-to-body="true" :visible="dialogDisplay" width="60%"
             :before-close="handleClose">
             <el-row>
                 <el-col :span="12">
@@ -97,11 +97,8 @@ export default {
         }
     },
     created() {
-        console.log('movieItem', this.movieItem);
         //解析上映的时间
         this.movieItem.releaseDate = moment(this.movieItem.releaseDate).format('YYYY-MM-DD')
-        //赋值目标链接
-        this.movieInfoUrl = '/movieInfo/' + this.movieItem.movieId
     },
     //监听器
     watch: {
@@ -116,18 +113,14 @@ export default {
             //  格式化时间
             this.movieItem.releaseDate = moment(this.movieItem.releaseDate).format('YYYY-MM-DD')
 
-            //赋值目标链接，用于跳转到这个电影的详细信息
-            this.movieInfoUrl = '/movieInfo/' + this.movieItem.name
         }
     },
 
     methods: {
         handleClose(done) {
-            this.$confirm('确认关闭？')
-                .then(_ => {
-                    done();
-                })
-                .catch(_ => { });
+            done();
+            this.dialogDisplay = false;
+
         }
 
     }

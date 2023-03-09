@@ -4,7 +4,8 @@
             <el-header style="width: 100%;height: 50%;box-shadow: 12px 12px 12px rgba(0,0,0,0.1);border: rgba(0,0,0,0.1);">
                 <el-row style="top: 5%;">
                     <el-input style="left: 30%;width: 30%;" v-model="searchName" placeholder="请输入电影名称"></el-input>
-                    <el-button style="position: relative;margin-left: 30%;" icon="el-icon-search" circle></el-button>
+                    <el-button style="position: relative;margin-left: 30%;" icon="el-icon-search" circle
+                        @click="serarch(searchName)"></el-button>
                 </el-row>
                 <h2 class="fangsheng">未评分电影列表
                 </h2>
@@ -24,8 +25,9 @@ export default {
     name: "movieRate",
     data() {
         return {
-            searchName: ''
-            ,
+            searchName: '',
+            allRate: [],
+            allUnrate: [],
             ratedMovies: [
                 {
                     name: '我不是药神',
@@ -182,9 +184,27 @@ export default {
         }
     },
     mounted() {
+        this.unrateMovies.forEach(element => {
+            this.allUnrate.push(element);
+        });
+        this.ratedMovies.forEach(element => {
+            this.allRate.push(element);
+        });
 
     },
     methods: {
+        serarch(name) {
+            if (name) {
+                let unrate = this.unrateMovies.filter((item) => item.name.includes(name));
+                this.$set(this, 'unrateMovies', unrate);
+                let rate = this.ratedMovies.filter((item) => item.name.includes(name));
+                this.$set(this, 'ratedMovies', rate);
+            } else {
+                this.$set(this, 'unrateMovies', allUnrate);
+                this.$set(this, 'ratedMovies', allRate);
+            }
+
+        },
 
     }
 }

@@ -13,7 +13,7 @@
       <i class="el-icon-video-camera-solid"></i>
       <span>电影评分</span>
     </el-menu-item>
-    <el-menu-item index="/application"
+    <el-menu-item index="/relationShip"
       style="position: relative;font-size: 20px;left: 15%;width: 10%;height: 100%;margin-left: 10%;">
       <i class="el-icon-chat-line-square"></i>
       <span>社交关系</span>

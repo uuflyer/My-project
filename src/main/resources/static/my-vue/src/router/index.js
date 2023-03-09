@@ -5,10 +5,8 @@ import Register from "../components/Register";
 import Home from "../components/Home";
 import Appindex from "../components/home/AppIndex.vue";
 import movieRate from "../components/common/movieRate";
-import EquipmentsGuide from "../components/equipments/EquipmentsGuide";
-import Equip from "../components/equipments/Equip";
-import UserInfo from "../components/user/UserSide";
 import Logout from "../components/user/Logout";
+import relationShip from "../components/common/relationShip";
 import BaseInfo from "../components/user/BaseInfo";
 import security from "../components/user/security";
 import UserIndex from "../components/user/UserIndex";
@@ -34,40 +32,12 @@ export default new Router({
         {
           path: '/movieRate', name: 'movieRate', component: movieRate, meta: { requireAuth: true },
         },
-
         {
-          path: '/userInfo',
-          name: 'userInfo',
-          component: UserIndex,
-          meta: {
-            requireAuth: true
-          },
-          children: [
-            {
-              path: '/userInfo/baseInfo',
-              name: 'baseIfo',
-              component: BaseInfo,
-              meta: { requireAuth: true }
-            },
-            {
-              path: '/userInfo/security',
-              name: 'security',
-              component: security,
-              meta: { requireAuth: true }
-            }
-          ]
-
+          path: '/relationShip', name: 'relationShip', component: relationShip, meta: { requireAuth: true },
         }
-      ]
-    },
 
-    {
-      path: '/guide',
-      name: 'Guide',
-      component: EquipmentsGuide,
-      meta: {
-        requireAuth: true
-      }
+
+      ]
     },
     {
       path: '/logout',
