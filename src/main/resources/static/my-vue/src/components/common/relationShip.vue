@@ -115,48 +115,48 @@ export default {
             ,
             tableData: [
                 {
-                    name: '测试用户1',
+                    name: '1',
                     sex: '1',
                     interests: ['喜剧', '科幻', '惊悚', '冒险'],
                     trustStatus: '1',
                 }, {
-                    name: '测试用户2',
+                    name: '2',
                     sex: '0',
                     interests: ['爱情', '犯罪', '悬疑', '灾难'],
                     trustStatus: '-1',
                 }
                 , {
-                    name: '测试用户3',
+                    name: '3',
                     sex: '1',
                     interests: ['动画', '传记', '家庭', '奇幻'],
                     trustStatus: '1',
                 }
                 , {
-                    name: '测试用户4',
+                    name: '4',
                     sex: '1',
                     interests: ['战争', '剧情', '犯罪', '推理'],
                     trustStatus: '0',
                 }
                 , {
-                    name: '测试用户5',
+                    name: '5',
                     sex: '0',
                     interests: ['暴力', '历史', '战争', '音乐'],
                     trustStatus: '-1',
                 }
                 , {
-                    name: '三体',
+                    name: '6',
                     sex: '0',
                     interests: ['喜剧', '悬疑', '科幻', '惊悚', '冒险'],
                     trustStatus: '-1',
                 }
                 , {
-                    name: '智子',
+                    name: '7',
                     sex: '0',
                     interests: ['爱情', '剧情',],
                     trustStatus: '-1',
                 }
                 , {
-                    name: '太阳',
+                    name: '8',
                     sex: '0',
                     interests: ['奇幻', '纪录片', '惊悚'],
                     trustStatus: '0',
