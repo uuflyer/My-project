@@ -5,7 +5,7 @@
         <div v-on:mouseover="isHover = true" v-on:mouseleave="isHover = false">
             <!-- 点击海报，进入该电影详细信息 -->
             <a href="javascript: void(0)" @click="dialogDisplay = true">
-                <img class="poster" :src="movieItem.url">
+                <img class="poster" :src="require('@/movies/allInfo/' + movieItem.url)">
             </a>
             <!--     显示电影下面的电影名字 -->
             <div class="title-style">
@@ -18,7 +18,7 @@
             <div class="movie-item-hover" v-if="isHover">
                 <!-- 海报 -->
                 <a href="javascript: void(0)" @click="dialogDisplay = true">
-                    <img class="poster-hover" :src="movieItem.url">
+                    <img class="poster-hover" :src="require('@/movies/allInfo/' + movieItem.url)">
                     <!-- 鼠标划过时显示的信息 -->
                     <div class="movie-hover-info">
                         <div class="title-hover">
@@ -41,13 +41,13 @@
             </div>
         </div>
 
-        <el-dialog center title="电影详情" :append-to-body="true" :visible="dialogDisplay" width="60%"
+        <el-dialog center title="电影详情" :append-to-body="true" :visible="dialogDisplay" width="40%"
             :before-close="handleClose">
             <el-row>
-                <el-col :span="12">
-                    <img :src="movieItem.url">
+                <el-col :span="8">
+                    <img :src="require('@/movies/allInfo/' + movieItem.url)">
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="16">
                     <div class="movie-info">
                         <span class="name-tags"><b>电影名称：{{ movieItem.name }}</b></span>
                     </div>
@@ -67,8 +67,7 @@
                         <span class="name-tags">
                             评分：
                         </span>
-                        <el-rate allow-half v-model="movieItem.rate" show-score text-color="#ff9900"
-                            score-template="{value}"></el-rate>
+                        <el-rate v-model="rate" show-score text-color="#ff9900" score-template="{value}"></el-rate>
                     </div>
 
 
@@ -76,7 +75,7 @@
             </el-row>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogDisplay = false">取 消</el-button>
-                <el-button type="primary" @click="dialogDisplay = false">保 存</el-button>
+                <el-button type="primary" @click="saveRate()">保 存</el-button>
             </span>
         </el-dialog>
     </div>
@@ -93,12 +92,13 @@ export default {
         return {
             dialogDisplay: false,
             isHover: false,
-            movieInfoUrl: ''
+            movieInfoUrl: '',
+            rate: 0,
         }
     },
     created() {
         //解析上映的时间
-        this.movieItem.releaseDate = moment(this.movieItem.releaseDate).format('YYYY-MM-DD')
+        // this.movieItem.releaseDate = moment(this.movieItem.releaseDate).format('YYYY-MM-DD')
     },
     //监听器
     watch: {
@@ -106,12 +106,11 @@ export default {
 
             // 监听 movieItem 属性的数据变化
             // 作用 : 只要 movieItem 的值发生变化,这个方法就会被调用
-
             this.movieItem.url = this.movieItem.url
             this.movieItem.name = this.movieItem.name
-            this.movieItem.rate = this.movieItem.rate
+            this.rate = this.movieItem.rate
             //  格式化时间
-            this.movieItem.releaseDate = moment(this.movieItem.releaseDate).format('YYYY-MM-DD')
+            this.movieItem.releaseDate = this.movieItem.releaseDate
 
         }
     },
@@ -121,6 +120,22 @@ export default {
             done();
             this.dialogDisplay = false;
 
+        },
+        saveRate() {
+            let param = {
+                userId: this.$store.state.user.id,
+                movieId: this.movieItem.movieId,
+                rate: this.rate
+            };
+            console.log('param', param);
+            this.$axios.post('/api/saveMovieRate/', param)
+                .then(resp => {
+                    console.log('save', resp);
+                    if (resp && resp.data.status === 'success') {
+                        this.$emit('refreshMovieInfo');
+                        this.dialogDisplay = false;
+                    }
+                })
         }
 
     }
@@ -131,6 +146,7 @@ export default {
 .movie-item {
     margin-top: 30px;
     margin-left: 30px;
+
     display: inline-block;
     vertical-align: baseline;
     position: relative;
@@ -144,7 +160,7 @@ export default {
 .title-style {
     width: 160px;
     white-space: nowrap;
-    overflow: auto;
+    overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
     font-size: 16px;
@@ -200,8 +216,8 @@ a {
 
 .movie-info {
     font-size: 20px;
-    line-height: 20px;
-    margin-top: 10%;
+    line-height: 30px;
+    margin-top: 6%;
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;

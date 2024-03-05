@@ -9,7 +9,7 @@ import store from './store'
 import movieItem from '@/components/common/movieItem.vue'
 
 var axios = require('axios')
-axios.defaults.baseURL = "http://localhost:8443/"
+axios.defaults.baseURL = "http://127.0.0.1:8000"
 axios.defaults.withCredentials = true
 
 Vue.prototype.$axios = axios
