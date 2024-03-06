@@ -14,7 +14,16 @@ export default {
   components:{PlayCard},
   data() {
     return {
-      lists: [],
+      lists: [{id: 1,picUrl: require('@/music/1.jpg'),name:"新歌AAA"},
+      {id: 2,picUrl: require('@/music/2.jpg'),name:"新歌BBB"},
+      {id: 3,picUrl: require('@/music/3.jpg'),name:"最新的歌"},
+      {id:4,picUrl: require('@/music/4.jpg'),name:"最新的歌322"},
+      {id: 5,picUrl: require('@/music/1.jpg'),name:"新歌AAA"},
+      {id: 6,picUrl: require('@/music/2.jpg'),name:"新歌BBB"},
+      {id: 7,picUrl: require('@/music/3.jpg'),name:"最新的歌"},
+      {id:8,picUrl: require('@/music/4.jpg'),name:"最新的歌322"},
+      {id: 9,picUrl: require('@/music/3.jpg'),name:"最新的歌"},
+      {id:10,picUrl: require('@/music/4.jpg'),name:"最新的歌322"}],
     }
   },
   mounted() {

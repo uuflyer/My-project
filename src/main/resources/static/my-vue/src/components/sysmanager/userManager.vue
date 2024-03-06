@@ -5,7 +5,7 @@
             <img src="@/components/Recommend/bg.png" />
           <el-button type="text">
             <h2 style="color: #000000; margin-right: 15px;font-size: 30px;">
-              用户社交关系
+              用户信息管理
             </h2>
           </el-button>
             <el-row style="padding: auto;">
@@ -87,7 +87,7 @@
             </span>
         </el-dialog>
 
-        <el-dialog center title="新增用户关系" :append-to-body="true" :visible.sync="showAddDialog" width="60%"
+        <el-dialog center title="新增用户信息" :append-to-body="true" :visible.sync="showAddDialog" width="60%"
             :before-close="handleCloseAddDialog">
             <el-table
                 :data="nonRelatedData.slice((addDialog.currentPage - 1) * addDialog.pageSize, addDialog.currentPage * addDialog.pageSize)"

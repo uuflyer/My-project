@@ -71,9 +71,14 @@ export default {
   name: "Hotlist",
   data() {
     return {
-      soarList: [],
-      newSongList: [],
-      originalList: []
+      soarList: [{name:"冰河纪"},{name:"风吹不走蝴蝶"},{name:"海（Sea）"},{name:"爱在西元前"}
+    ,{name:"七里香"},{name:"江南"},{name:"你说的都对"},{name:"一样美丽"}],
+
+      newSongList: [{name:"森林狂想曲"},{name:"穿过竹林的风"},{name:"鲸鱼在唱歌"},{name:"蓝色洋流"}
+    ,{name:"执迷不悟 "},{name:"面具"},{name:"下雨天"},{name:"南归"}],
+
+      originalList: [{name:"后知后觉"},{name:"不想你猜"},{name:"热辣滚烫"},{name:"回到未来"}
+    ,{name:"是你"},{name:"骑士传说"},{name:"彩虹"},{name:"在你的身边"}]
     };
   },
   mounted() {
@@ -115,9 +120,10 @@ export default {
   height: 480px;
   display: flex;
   flex-flow: row nowrap;
+  overflow-y: auto;
 
   ul {
-    width: calc(730px / 3);
+    width: calc(100% / 3);
     background-color: #f5f5f5;
     border: 1px solid #d3d3d3;
     display: flex;

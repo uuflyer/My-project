@@ -94,13 +94,12 @@
     }
   }
   .title{
-    background: -webkit-linear-gradient(315deg,#42d392 25%,#647eff);//背景
--webkit-background-clip: text;//字体
--webkit-text-fill-color:transparent;
-opacity: 0.7;//透明度
-background-color:#64696d+7a;//制淡化背景不改变字体透明度
-font-size: 18px;
-
+      background: -webkit-linear-gradient(315deg,#42d392 25%,#647eff);//背景
+      -webkit-background-clip: text;//字体
+      -webkit-text-fill-color:transparent;
+      opacity: 0.7;//透明度
+      background-color:#64696d+7a;//制淡化背景不改变字体透明度
+      font-size: 18px;
   }
 
   </style>

@@ -43,6 +43,9 @@ export default {
             alert("登录失败！用户名或密码错误");
             return;
           }
+          if(this.loginForm.username == 'admin'){
+            this.$set(resp.data,'type','admin')
+          }
           this.$store.commit('login', resp.data);
           console.log('router', this.$router);
           this.$router.push('/home');
@@ -82,8 +85,8 @@ export default {
 .login-container {
   border-radius: 15px;
   background-clip: padding-box;
-  margin: 200px auto;
-  width: 350px;
+  margin: 300px auto;
+  width: 500px;
   padding: 35px 35px 15px 35px;
   background: #fff;
   border: 1px solid #eaeaea;
@@ -97,7 +100,7 @@ export default {
 }
 
 #poster {
-  background: url("../assets/index.jpg") no-repeat;
+  background: url("../assets/back2.jpeg") no-repeat;
   background-position: center top;
   height: 100%;
   width: 100%;

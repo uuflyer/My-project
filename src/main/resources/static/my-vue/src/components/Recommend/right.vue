@@ -1,17 +1,11 @@
 <template>
   <div class='right'>
-    <div class='loginInfo' v-if="!isLogin">
-      <span>登录网抑云音乐，可以享受无限收藏的乐趣，并且无限同步到手机</span>
-      <br>
-      <el-button type='primary' round style='margin-top: 10px' @click='dialogFormVisible = true'>用户登录</el-button>
-      <Login :dialogFormVisible.sync='dialogFormVisible' />
-    </div>
-    <div class="loginInfo2" v-if="isLogin">
+    <div class="loginInfo2">
 
       <div class="userInfo">
         <!--  头像  -->
         <div class='avatar'>
-          <img :src="`${userAvatarUrl}?param=80y80`"/>
+          <img :src="userAvatarUrl"/>
         </div>
         <!--  用户名  -->
         <div style="margin-left: 10px;display: flex;flex-flow: column nowrap;">
@@ -39,7 +33,7 @@
       <el-card shadow='always' class='artist-card' :body-style="{ padding: '6px' }" v-for='artist in artistsList'
                :key='artist.id'>
         <div>
-          <img :src='`${artist.img1v1Url}?param=68y68`'/>
+          <img :src='artist.img1v1Url'/>
           <div>
             <span>{{ artist.name }}</span>
             <br/>
@@ -48,9 +42,9 @@
         </div>
       </el-card>
     </div>
-    <div class='dj-list'>
+    <!-- <div class='dj-list'>
       <div class='title' style='margin-bottom: 10px'>
-        <a href=''>热门主播</a>
+        <a href=''>热门歌曲</a>
         <hr>
       </div>
       <ul>
@@ -59,7 +53,7 @@
           <span>{{ dj.nickName }}</span>
         </li>
       </ul>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -70,14 +64,23 @@ export default {
   name: 'right',
   data() {
     return {
-      artistsList: [],
+      artistsList: [
+      {id:3,img1v1Url: require("@/music/singer/eminem.jpg"),name:"eminem"},
+      {id:4,img1v1Url: require("@/music/singer/ljj.jpg"),name:"林俊杰"},
+      {id:7,img1v1Url:require("@/music/singer/zjl.jpg"),name:"周杰伦"},],
       djList: [],
+      userAvatarUrl: require('@/assets/avatar1.jpg'),
+      userLevel: 99,
+      userEventCount: 1001,
+      follows: 999,
+      followeds: 989,
+      userNickname: '幸运玩家',
       dialogFormVisible: false,
     }
   },
   mounted() {
-    this.getTopArtists()
-    this.getTopDj()
+    // this.getTopArtists()
+    // this.getTopDj()
   },
   methods: {
     async getTopArtists() {
@@ -95,10 +98,10 @@ export default {
       })
     }
   },
-  computed: {
-    ...mapState(["isLogin"]),
-    ...mapGetters(["userAvatarUrl", 'followeds', 'follows', 'userEventCount', "userNickname", "userLevel"])
-  }
+  // computed: {
+  //   ...mapState(["isLogin"]),
+  //   ...mapGetters(["userAvatarUrl", 'followeds', 'follows', 'userEventCount', "userNickname", "userLevel"])
+  // }
 }
 </script>
 

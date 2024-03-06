@@ -5,7 +5,6 @@
     <div class="sidebar-container">
       <ElMenu />
     </div>
-      
       <div class="main-container">
           <HeaderNav class="header-main"/>
           <AppContent class="app-main" />
@@ -85,11 +84,12 @@ export default {
     -webkit-transition: margin-left 0.28s;
     transition: margin-left 0.28s;
     position: fixed;
-    width: calc(100vw);
+    width: 100%;
     top: 50px;
     right: 0;
     bottom: 0;
     left: 0;
+    overflow-y: scroll;
     .header-main {
       position: fixed;
       height: 50px;
@@ -107,7 +107,7 @@ export default {
       min-height: 100%;
       width: 100%;
       position: relative;
-      overflow: hidden;
+      overflow: auto;
     }
   }
 }

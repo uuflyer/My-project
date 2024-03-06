@@ -1,6 +1,12 @@
 <template>
   <div>
-    <div style="width: 100%; background-color: #fff;margin-left: 210px;">
+    <div style="width: 70%; background-color: #fff;margin-left: 210px;">
+      <img src="./bg.png" />
+          <el-button type="text">
+            <h2 style="color: #000000; margin-right: 15px">
+              热门歌曲
+            </h2>
+          </el-button>
       <el-carousel :interval="4000" type="card" height="290px" arrow="always" class="el-carousel"
         indicator-position="none">
         <el-carousel-item v-for="(banner, index) in banners" :key="index">
@@ -8,32 +14,18 @@
         </el-carousel-item>
       </el-carousel>
     </div>
-
     <div class="main">
       <div class="left">
-
-        <!-- 热门推荐 -->
-        <div class="left-top">
-          <img src="./bg.png" />
+        <img src="./bg.png" />
           <el-button type="text">
             <h2 style="color: #000000; margin-right: 15px">
-              热门推荐
+              每日推荐
             </h2>
           </el-button>
-          <ul>
-            <li><a href="#">华语</a></li>
-            <li><a href="#">流行</a></li>
-            <li><a href="#">摇滚</a></li>
-            <li><a href="#">民谣</a></li>
-            <li><a href="#">电子</a></li>
-          </ul>
-        </div>
         <hr color="#C20C0C" style="margin-bottom: 20px" />
         <Playlists></Playlists>
-
         <!-- 新碟上架 -->
-        <NewestAlbum :newestAlbum="newestAlbum" />
-
+        <!-- <NewestAlbum :newestAlbum="newestAlbum" /> -->
         <!-- 榜单 -->
         <Hotlist />
       </div>
@@ -97,20 +89,20 @@ export default {
 
 <style scoped lang='less'>
 .el-carousel {
-  width: 1460px;
+  width: 1200px;
   margin: 0 auto;
 }
 
 .main {
-  width: 1020px;
+  width: 100%;
   margin: 0 auto;
   margin-left: 210px;
   display: flex;
   background-color: #fff;
 
   .left {
-    width: 770px;
-    padding: 20px;
+    width: 65%;
+    padding-right: 5%;
     border: 1px solid #f5f5f5;
 
     .el-icon-s-help {

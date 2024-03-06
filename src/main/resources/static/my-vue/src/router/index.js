@@ -7,10 +7,8 @@ import Layout from "../layouts/index.vue";
 import movieRate from "../components/common/movieRate";
 import Logout from "../components/user/Logout";
 import relationShip from "../components/common/relationShip";
-import BaseInfo from "../components/user/BaseInfo";
-import security from "../components/user/security";
-import UserIndex from "../components/user/UserIndex";
-import Recommend from "@/components/Recommend/Recommend"
+import userManager from "@/components/sysmanager/userManager";
+import Recommend from "@/components/Recommend/Recommend";
 import Home from '../components/common/Home';
 
 Vue.use(Router)
@@ -30,26 +28,26 @@ const router = new Router({
         },
         {
           path: '/system', name: 'movieRate', component: Layout,
-          meta: { title: "系统管理", icon: "el-icon-s-home", requireAuth: true },
+          meta: { title: "系统管理", icon: "el-icon-s-tools", requireAuth: true, managerFlag: true },
           children: [
             {
               path: "userManager",
-              meta: { title: "用户管理", icon: "el-icon-s-home" },
-              component: movieRate,
+              meta: { title: "用户管理", icon: "el-icon-user" },
+              component: userManager,
             },
             {
-              path: "item2",
-              meta: { title: "歌曲管理", icon: "el-icon-s-home" },
+              path: "songManager",
+              meta: { title: "歌曲管理", icon: "el-icon-headset" },
               component: relationShip,
             },
           ]
         },
         {
           path: 'relationShip', name: 'relationShip', component: relationShip,
-          meta: { title: "社交关系", icon: "el-icon-s-home", requireAuth: true },
+          meta: { title: "社交关系", icon: "el-icon-chat-dot-square", requireAuth: true },
         }, {
           path: 'songsRate', name: 'songsRate', component: relationShip,
-          meta: { title: "歌曲评分", icon: "el-icon-s-home", requireAuth: true },
+          meta: { title: "歌曲评分", icon: "el-icon-star-on", requireAuth: true },
         }
 
 
@@ -63,6 +61,7 @@ const router = new Router({
     {
       path: '/logout',
       name: 'Logout',
+      meta: { title: "退出" },
       component: Login
     },
 

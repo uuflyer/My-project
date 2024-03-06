@@ -10,6 +10,7 @@ export default new Vuex.Store(
         username: '',
         tel: '',
         id: '',
+        type: '',
       },
       token: ''
     },
@@ -23,11 +24,9 @@ export default new Vuex.Store(
         console.log('store', userInfo);
         state.user.username = userInfo.userName
         state.user.id = userInfo.userId;
+        state.user.type = userInfo.type;
         console.log('state', state.user.id);
       },
-      setEquip(state, data) {
-        state.equips = data
-      }
     }
   }
 )

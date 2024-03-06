@@ -13,7 +13,13 @@
         :item="route"
         :fatherPath="route.path"
       ></MenuItem>
+     
+      <MenuItem :key="111"
+      :item="logout"
+      :fatherPath="logout.path"
+      ></MenuItem>
     </el-menu>
+    
   </div>
 </template>
 
@@ -27,11 +33,25 @@ export default {
   data() {
     return {
       routersList: [],
+      logout:{
+      path: '/logout',
+      name: 'Logout',
+      meta: { title: "退出",icon:"el-icon-switch-button" },
+    },
     };
   },
   mounted() {
     // 获取所有定义的一级菜单和多级菜单
-    this.routersList = routers.options.routes[0].children;
+    
+    if(this.$store.state.user.type === 'admin'){
+      this.routersList = routers.options.routes[0].children;
+    }else{
+     const menus = routers.options.routes[0].children;
+     console.log(menus)
+     this.routersList = menus.filter(element => { return element.meta.title != '系统管理' });
+     console.log(this.routersList);
+    }
+    
   }
 };
 </script>
