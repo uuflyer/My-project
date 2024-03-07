@@ -6,8 +6,10 @@ import Appindex from "../components/home/AppIndex.vue";
 import Layout from "../layouts/index.vue";
 import movieRate from "../components/common/movieRate";
 import Logout from "../components/user/Logout";
+import songRate from '../components/common/songRate.vue';
 import relationShip from "../components/common/relationShip";
 import userManager from "@/components/sysmanager/userManager";
+import songManager from "@/components/sysmanager/songManager";
 import Recommend from "@/components/Recommend/Recommend";
 import Home from '../components/common/Home';
 
@@ -38,7 +40,7 @@ const router = new Router({
             {
               path: "songManager",
               meta: { title: "歌曲管理", icon: "el-icon-headset" },
-              component: relationShip,
+              component: songManager,
             },
           ]
         },
@@ -46,7 +48,7 @@ const router = new Router({
           path: 'relationShip', name: 'relationShip', component: relationShip,
           meta: { title: "社交关系", icon: "el-icon-chat-dot-square", requireAuth: true },
         }, {
-          path: 'songsRate', name: 'songsRate', component: relationShip,
+          path: 'songsRate', name: 'songsRate', component: songRate,
           meta: { title: "歌曲评分", icon: "el-icon-star-on", requireAuth: true },
         }
 

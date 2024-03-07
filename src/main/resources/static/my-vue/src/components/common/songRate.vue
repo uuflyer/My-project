@@ -5,15 +5,15 @@
             <img src="@/components/Recommend/bg.png" />
           <el-button type="text">
             <h2 style="color: #000000; margin-right: 15px;font-size: 30px;">
-              用户社交关系
+              歌曲评分
             </h2>
           </el-button>
             <el-row style="padding: auto;">
-                <span style="margin-left: 1%;">用户名称：</span>
-                <el-input style="width: 200px;padding-bottom: 2%;" v-model="searchName" placeholder="请输入用户名称"></el-input>
+                <span style="margin-left: 1%;">歌曲名称：</span>
+                <el-input style="width: 200px;padding-bottom: 2%;" v-model="searchName" placeholder="请输入歌曲名称"></el-input>
                 <el-button style="position: relative;" icon="el-icon-search" circle></el-button>
-                <el-button type="success" icon="el-icon-plus" style="position:fixed; margin-right: 40px;"
-                @click="showAddDilag()">添加</el-button>
+                <!-- <el-button type="success" icon="el-icon-plus" style="position:fixed; margin-right: 40px;"
+                @click="showAddDilag()">添加</el-button> -->
             </el-row>
             
             <el-table
@@ -21,30 +21,34 @@
                 :border="true" 
                 :header-cell-style="rowclass"
                 :cell-style="{borderColor:'#C0C0C0'}"
-                style="width: 100%;border: solid 1px black;">
-                <el-table-column fixed prop="userName" label="用户名称" width="150">
+                style="width: 100%;border: solid 1px black;left: 5px;">
+                <el-table-column fixed prop="songName" label="歌曲名称" width="150">
                 </el-table-column>
-                <el-table-column prop="interests" label="喜欢歌曲类型">
-                    <template slot-scope="interestScope">
+                <el-table-column prop="type" label="歌曲类型">
+                    <template slot-scope="typeScope">
                         <el-tag style="margin-left: 2%;margin-top: 2%;"
-                            v-for="item in interestScope.row.interests.split(',')" :key="item">{{
+                            v-for="item in typeScope.row.type.split(',')" :key="item">{{
                                 item }}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="interestSinger" label="喜欢歌手">
-                    <template slot-scope="interestSingerScope">
+                <el-table-column prop="typeSinger" label="歌手名称">
+                    <template slot-scope="typeSingerScope">
                         <el-tag style="margin-left: 2%;margin-top: 2%;"
-                            v-for="item in interestSingerScope.row.interestSinger.split(',')" :key="item">{{
+                            v-for="item in typeSingerScope.row.singer.split(',')" :key="item">{{
                                 item }}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="trustStatus" label="信任状态">
-                    <template slot-scope="trustStatusScope">
-                        <el-tag v-if="trustStatusScope.row.trustStatus == '1'" type="success">关注</el-tag>
-                        <el-tag v-else-if="trustStatusScope.row.trustStatus == '-1'" type="danger">不感兴趣</el-tag>
-                        <el-tag v-else type="info">未标记</el-tag>
+                <el-table-column prop="rate" label="歌曲评分">
+                    <template slot-scope="rateScope">
+                        <el-rate 
+                        disabled
+                        show-score
+                            v-model="rateScope.row.rate"
+                            score-template="{value}"
+                            text-color="#ff9900"
+                            :colors=colors>
+                            </el-rate>
                     </template>
-
                 </el-table-column>
 
                 <el-table-column fixed="right" label="操作">
@@ -65,59 +69,53 @@
 
 
 
-        <el-dialog center title="编辑用户关系" :append-to-body="true" :visible="showEditDialog" width="800px" height="800px"
-            :before-close="handleClose">
-            <el-row style="left: 10%;margin-top: 3%;">
-                <span style="float: left; height: 35px;line-height: 35px;width: 20%;">用户名称：
-                </span>
-                <el-input style="float: left;height: 35px;resize:none;width: 60%;left: 35px;" v-model="curtEditRow.userName"
-                    disabled></el-input>
-            </el-row>
-            <el-row style="left: 10%;margin-top: 3%;">
-                <span style="float: left; height: 35px;line-height: 35px;width: 20%;">喜欢音乐类型：
-                </span>
-                <el-input style="float: left;height: 35px;resize:none;width: 60%;left: 35px;"
-                    v-model="curtEditRow.interests" disabled></el-input>
-            </el-row>
-            <el-row style="left: 10%;margin-top: 3%;">
-                <span style="float: left; height: 35px;line-height: 35px;width: 20%;">喜欢歌手：
-                </span>
-                <el-input style="float: left;height: 35px;resize:none;width: 60%;left: 35px;"
-                    v-model="curtEditRow.interestSinger" disabled></el-input>
-            </el-row>
-            <el-row style="left: 10%;margin-top: 3%;">
-                <span style="float: left; height: 35px;line-height: 35px;width: 20%;">信任状态：
-                </span>
-                <el-select clearable v-model="curtEditRow.trustStatus"
-                    style="float: left;height: 35px;resize:none;width: 60%;left: 35px;">
-                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                    </el-option></el-select>
+            <el-dialog center title="歌曲评分编辑" :append-to-body="true" :visible="showEditDialog" width="800px"
+                :before-close="handleClose">
+                <el-image :src="`${curtEditRow.picUrl}?param=150y140`" style='margin-left: 35%;width: 230px;height: 250px;'
+      class="image" lazy />
+                <el-row style="left: 10%;margin-top: 3%;">
+                    <span style="float: left; height: 35px;line-height: 35px;width: 20%;">歌曲名称：
+                    </span>
+                    <el-input style="float: left;height: 35px;resize:none;width: 60%;" v-model="curtEditRow.songName"
+                        disabled></el-input>
+                </el-row>
+                <el-row style="left: 10%;margin-top: 3%;">
+                    <span style="float: left; height: 35px;line-height: 35px;width: 20%;">歌曲类型：
+                    </span>
+                    <el-input style="float: left;height: 35px;resize:none;width: 60%;"
+                        v-model="curtEditRow.type" disabled></el-input>
+                </el-row>
+                <el-row style="left: 10%;margin-top: 3%;">
+                    <span style="float: left; height: 35px;line-height: 35px;width: 20%;">歌曲评分：
+                    </span>
+                    <el-rate 
+                    style="margin-top: 10px;"
+                        show-score
+                        allow-half
+                            v-model="curtEditRow.rate"
+                            score-template="{value}"
+                            text-color="#ff9900"
+                            :colors=colors>
+                            </el-rate>
 
-            </el-row>
-            <span slot="footer" class="dialog-footer" style="margin-top: 100px;">
-                <el-button @click="showEditDialog = false">取 消</el-button>
-                <el-button type="primary" @click="save(curtEditRow)">保 存</el-button>
-            </span>
-        </el-dialog>
+                </el-row>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="showEditDialog = false">取 消</el-button>
+                    <el-button type="primary" @click="save(curtEditRow)">保 存</el-button>
+                </span>
+            </el-dialog>
 
-        <el-dialog center title="新增用户关系" :append-to-body="true" :visible.sync="showAddDialog" width="60%"
+        <el-dialog center title="新增用户信息" :append-to-body="true" :visible.sync="showAddDialog" width="60%"
             :before-close="handleCloseAddDialog">
             <el-table
                 :data="nonRelatedData.slice((addDialog.currentPage - 1) * addDialog.pageSize, addDialog.currentPage * addDialog.pageSize)"
                 :border="true" style="width: 100%;height: 60%;">
-                <el-table-column fixed prop="userName" label="用户名称" width="150">
+                <el-table-column fixed prop="songName" label="用户名称" width="150">
                 </el-table-column>
-                <el-table-column prop="interests" label="喜欢歌曲类型">
-                    <template slot-scope="interestScope">
+                <el-table-column prop="type" label="喜欢歌曲类型">
+                    <template slot-scope="typeScope">
                         <el-tag style="margin-left: 2%;margin-top: 2%;"
-                            v-for="item in interestScope.row.interests.split(',')" :key="item">{{
-                                item }}</el-tag>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="interestSinger" label="喜欢歌手">
-                    <template slot-scope="interestSingerScope">
-                        <el-tag style="margin-left: 2%;margin-top: 2%;"
-                            v-for="item in interestSingerScope.row.interestSinger.split(',')" :key="item">{{
+                            v-for="item in typeScope.row.type.split(',')" :key="item">{{
                                 item }}</el-tag>
                     </template>
                 </el-table-column>
@@ -163,14 +161,15 @@ export default {
             curtEditRow: {},
             showEditDialog: false,
             showAddDialog: false,
-            nonRelatedData: [{userName:"测试用户99",interests:"欧美,流行,民谣",interestSinger:"张学友,张杰"},{userName:"测试用户108",interests:"欧美,流行,民谣",interestSinger:"xxx"}],
+            nonRelatedData: [],
             addDialog: {
                 currentPage: 1, // 当前页码
                 total: 20, // 总条数
                 pageSize: 5, // 每页的数据条数
 
-            }
-            ,
+            },
+            colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
+            
             options: [{
                 label: '关注',
                 value: 1,
@@ -185,10 +184,16 @@ export default {
             }
             ]
             ,
-            tableData: [{userName:"测试用户1",interests:"欧美,流行,民谣",interestSinger:"eminem,Taylor Swift,Charlie Puth"},
-            {userName:"测试用户2",interests:"粤语,电音,轻音乐",trustStatus: 1,interestSinger:"张学友,张国荣"},
-            {userName:"测试用户9",interests:"rap,民谣",trustStatus: 1,interestSinger:"马思维,TY,Jony J"},
-            {userName:"测试用户55",interests:"古风音乐,吉他,日语",trustStatus: -1,interestSinger:"米津玄师,花泽香菜"}],
+            tableData: [{songName:"1989",type:"欧美,流行",picUrl: require('@/music/all/1989.jpg'),singer:"Taylor Swift",rate: 3.7},
+            {songName:"Lose Yourself",picUrl: require('@/music/all/lose yourself.jpg'),type:"Rap,欧美,流行",singer:"Eminem",rate: 2.5},
+            {songName:"Rap God",type:"Rap,欧美,流行",picUrl: require('@/music/all/rap god.jpg'),singer:"Eminem",rate: 4.8},
+            {songName:"黑马王子",type:"Rap,中文说唱",picUrl: require('@/music/all/黑马王子.jpg'),singer:"马思唯",rate: 4.3},
+            {songName:"南方姑娘",type:"民谣,中文",picUrl: require('@/music/all/南方姑娘.jpg'),singer:"赵雷",rate: 3},
+            {songName:"启示录",type:"中文,流行",picUrl: require('@/music/all/启示录.jpg'),singer:"邓紫棋",rate: 3},
+            {songName:"她说",type:"中文,流行",picUrl: require('@/music/all/她说.jpg'),singer:"林俊杰",rate: 4.1},
+            {songName:"吻别",type:"怀旧,情歌,中文",picUrl: require('@/music/all/吻别.jpg'),singer:"张学友",rate: 3},    
+            {songName:"我是如此相信",type:"中文,流行",picUrl: require('@/music/all/我是如此相信.jpg'),singer:"周杰伦",rate: 3.6},
+            {songName:"生命因你而火热",type:"摇滚,中文",picUrl: require('@/music/all/生命因你而火热.jpg'),singer:"新裤子",rate: 4}],
             curtPageData: [],
         }
     },
@@ -243,6 +248,12 @@ export default {
                 })
         },
         deleteItem(row) {
+
+            this.$confirm('是否确认删除当前歌曲信息?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() =>{
             let curtUserId = this.$store.state.user.id;
             this.$axios.post('/api/delete_tableData/',
                 { primaryUserId: curtUserId, friendUserId: row.id })
@@ -259,7 +270,7 @@ export default {
                     }
                 })
             let filter = this.tableData.filter((val) => val.name !== row.name);
-            this.$set(this, 'tableData', filter);
+            this.$set(this, 'tableData', filter);})
         },
         addRelateShip(rowData) {
             let param = { primaryUserId: this.$store.state.user.id, friendUserId: rowData.id, trustStatus: rowData.trustStatus };

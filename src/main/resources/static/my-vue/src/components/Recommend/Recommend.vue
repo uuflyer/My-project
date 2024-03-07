@@ -19,7 +19,7 @@
         <img src="./bg.png" />
           <el-button type="text">
             <h2 style="color: #000000; margin-right: 15px">
-              每日推荐
+              个性化推荐
             </h2>
           </el-button>
         <hr color="#C20C0C" style="margin-bottom: 20px" />

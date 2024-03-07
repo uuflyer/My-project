@@ -1,13 +1,14 @@
 <template>
-  <el-card :body-style="{ padding: '0px' }" class="playcard" @click.native="toDetailPage">
-    <el-image :src="`${data.picUrl || data.coverImgUrl}?param=150y140`" style='width: 150px;height: 140px;'
+  <el-card :body-style="{ padding: '0px' }" class="playcard" >
+    <el-image :src="`${data.picUrl || data.coverImgUrl}?param=150y140`" style='width: 160px;height: 140px;'
       class="image" lazy />
     <div style="padding: 6px">
       <div class="bottom">
         <span><i class="el-icon-headset" style="color: #c20c0c"></i>{{ playCount }}</span>
         <el-button type="text" icon="el-icon-video-play" @click.stop="changeMusiclist"></el-button>
       </div>
-      <a class="title">{{ data.name }}</a>
+      <a class="title"><strong>{{ data.name }}</strong></a>
+      <a class="title">歌手：{{ data.singerName }}</a>
     </div>
   </el-card>
 </template>

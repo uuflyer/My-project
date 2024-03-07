@@ -12,8 +12,8 @@
                 <span style="margin-left: 1%;">用户名称：</span>
                 <el-input style="width: 200px;padding-bottom: 2%;" v-model="searchName" placeholder="请输入用户名称"></el-input>
                 <el-button style="position: relative;" icon="el-icon-search" circle></el-button>
-                <el-button type="success" icon="el-icon-plus" style="position:fixed; margin-right: 40px;"
-                @click="showAddDilag()">添加</el-button>
+                <!-- <el-button type="success" icon="el-icon-plus" style="position:fixed; margin-right: 40px;"
+                @click="showAddDilag()">添加</el-button> -->
             </el-row>
             
             <el-table
@@ -31,18 +31,17 @@
                                 item }}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="trustStatus" label="信任状态">
-                    <template slot-scope="trustStatusScope">
-                        <el-tag v-if="trustStatusScope.row.trustStatus == '1'" type="success">关注</el-tag>
-                        <el-tag v-else-if="trustStatusScope.row.trustStatus == '-1'" type="danger">不感兴趣</el-tag>
-                        <el-tag v-else type="info">未标记</el-tag>
+                <el-table-column prop="interestSinger" label="喜欢歌手">
+                    <template slot-scope="interestSingerScope">
+                        <el-tag style="margin-left: 2%;margin-top: 2%;"
+                            v-for="item in interestSingerScope.row.interestSinger.split(',')" :key="item">{{
+                                item }}</el-tag>
                     </template>
-
                 </el-table-column>
 
                 <el-table-column fixed="right" label="操作">
                     <template slot-scope="scope">
-                        <el-button type="primary" @click="handleEdit(scope.row)" icon="el-icon-edit" circle></el-button>
+                        <!-- <el-button type="primary" @click="handleEdit(scope.row)" icon="el-icon-edit" circle></el-button> -->
                         <el-button type="danger" icon="el-icon-delete" circle @click="deleteItem(scope.row)"></el-button>
                     </template>
                 </el-table-column>
@@ -58,34 +57,34 @@
 
 
 
-        <el-dialog center title="用户关系" :append-to-body="true" :visible="showEditDialog" width="60%"
-            :before-close="handleClose">
-            <el-row style="left: 10%;margin-top: 3%;">
-                <span style="float: left; height: 35px;line-height: 35px;width: 20%;">用户名称：
-                </span>
-                <el-input style="float: left;height: 35px;resize:none;width: 60%;left: 35px;" v-model="curtEditRow.userName"
-                    disabled></el-input>
-            </el-row>
-            <el-row style="left: 10%;margin-top: 3%;">
-                <span style="float: left; height: 35px;line-height: 35px;width: 20%;">感兴趣电影类型：
-                </span>
-                <el-input style="float: left;height: 35px;resize:none;width: 60%;left: 35px;"
-                    v-model="curtEditRow.interests" disabled></el-input>
-            </el-row>
-            <el-row style="left: 10%;margin-top: 3%;">
-                <span style="float: left; height: 35px;line-height: 35px;width: 20%;">信任状态：
-                </span>
-                <el-select clearable v-model="curtEditRow.trustStatus"
-                    style="float: left;height: 35px;resize:none;width: 60%;left: 35px;">
-                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                    </el-option></el-select>
+            <el-dialog center title="用户关系" :append-to-body="true" :visible="showEditDialog" width="60%"
+                :before-close="handleClose">
+                <el-row style="left: 10%;margin-top: 3%;">
+                    <span style="float: left; height: 35px;line-height: 35px;width: 20%;">用户名称：
+                    </span>
+                    <el-input style="float: left;height: 35px;resize:none;width: 60%;left: 35px;" v-model="curtEditRow.userName"
+                        disabled></el-input>
+                </el-row>
+                <el-row style="left: 10%;margin-top: 3%;">
+                    <span style="float: left; height: 35px;line-height: 35px;width: 20%;">感兴趣电影类型：
+                    </span>
+                    <el-input style="float: left;height: 35px;resize:none;width: 60%;left: 35px;"
+                        v-model="curtEditRow.interests" disabled></el-input>
+                </el-row>
+                <el-row style="left: 10%;margin-top: 3%;">
+                    <span style="float: left; height: 35px;line-height: 35px;width: 20%;">信任状态：
+                    </span>
+                    <el-select clearable v-model="curtEditRow.trustStatus"
+                        style="float: left;height: 35px;resize:none;width: 60%;left: 35px;">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option></el-select>
 
-            </el-row>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="showEditDialog = false">取 消</el-button>
-                <el-button type="primary" @click="save(curtEditRow)">保 存</el-button>
-            </span>
-        </el-dialog>
+                </el-row>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="showEditDialog = false">取 消</el-button>
+                    <el-button type="primary" @click="save(curtEditRow)">保 存</el-button>
+                </span>
+            </el-dialog>
 
         <el-dialog center title="新增用户信息" :append-to-body="true" :visible.sync="showAddDialog" width="60%"
             :before-close="handleCloseAddDialog">
@@ -165,7 +164,10 @@ export default {
             }
             ]
             ,
-            tableData: [],
+            tableData: [{userName:"测试用户1",interests:"欧美,流行,民谣",interestSinger:"eminem,Taylor Swift,Charlie Puth"},
+            {userName:"测试用户2",interests:"粤语,电音,轻音乐",trustStatus: 1,interestSinger:"张学友,张国荣"},
+            {userName:"测试用户9",interests:"rap,民谣",trustStatus: 1,interestSinger:"马思维,TY,Jony J"},
+            {userName:"测试用户55",interests:"古风音乐,吉他,日语",trustStatus: -1,interestSinger:"米津玄师,花泽香菜"}],
             curtPageData: [],
         }
     },
@@ -220,6 +222,12 @@ export default {
                 })
         },
         deleteItem(row) {
+
+            this.$confirm('是否确认删除当前用户?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() =>{
             let curtUserId = this.$store.state.user.id;
             this.$axios.post('/api/delete_tableData/',
                 { primaryUserId: curtUserId, friendUserId: row.id })
@@ -236,7 +244,7 @@ export default {
                     }
                 })
             let filter = this.tableData.filter((val) => val.name !== row.name);
-            this.$set(this, 'tableData', filter);
+            this.$set(this, 'tableData', filter);})
         },
         addRelateShip(rowData) {
             let param = { primaryUserId: this.$store.state.user.id, friendUserId: rowData.id, trustStatus: rowData.trustStatus };
