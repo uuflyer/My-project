@@ -2,16 +2,12 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from "../components/Login";
 import Register from "../components/Register";
-import Appindex from "../components/home/AppIndex.vue";
 import Layout from "../layouts/index.vue";
-import movieRate from "../components/common/movieRate";
-import Logout from "../components/user/Logout";
 import songRate from '../components/common/songRate.vue';
 import relationShip from "../components/common/relationShip";
 import userManager from "@/components/sysmanager/userManager";
 import songManager from "@/components/sysmanager/songManager";
 import Recommend from "@/components/Recommend/Recommend";
-import Home from '../components/common/Home';
 
 Vue.use(Router)
 

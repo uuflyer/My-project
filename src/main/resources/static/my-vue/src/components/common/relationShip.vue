@@ -17,22 +17,22 @@
             </el-row>
             
             <el-table
-                :data="this.tableData ? this.tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize) : []"
+                :data="curtPageData"
                 :border="true" 
                 :header-cell-style="rowclass"
                 :cell-style="{borderColor:'#C0C0C0'}"
                 style="width: 100%;border: solid 1px black;">
                 <el-table-column fixed prop="userName" label="用户名称" width="150">
                 </el-table-column>
-                <el-table-column prop="interests" label="喜欢歌曲类型">
-                    <template slot-scope="interestScope">
+                <el-table-column prop="interestsSongType" label="喜欢歌曲类型">
+                    <template slot-scope="interestScope" v-if="interestScope.row.interestsSongType">
                         <el-tag style="margin-left: 2%;margin-top: 2%;"
-                            v-for="item in interestScope.row.interests.split(',')" :key="item">{{
+                            v-for="item in interestScope.row.interestsSongType.split(',')" :key="item">{{
                                 item }}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column prop="interestSinger" label="喜欢歌手">
-                    <template slot-scope="interestSingerScope">
+                    <template slot-scope="interestSingerScope" v-if="interestSingerScope.row.interestSinger">
                         <el-tag style="margin-left: 2%;margin-top: 2%;"
                             v-for="item in interestSingerScope.row.interestSinger.split(',')" :key="item">{{
                                 item }}</el-tag>
@@ -57,7 +57,7 @@
             <div class="block" style="margin-top: 15px;">
                 <el-pagination align="center" @size-change="handleSizeChange" @current-change="handleCurrentChange"
                     :current-page="currentPage" :page-sizes="[1, 5, 10, 20]" :page-size="pageSize"
-                    layout="total, sizes, prev, pager, next, jumper" :total="tableData ? tableData.length : 20">
+                    layout="total, sizes, prev, pager, next, jumper" :total="total">
                 </el-pagination>
             </div>
     
@@ -95,7 +95,7 @@
 
             </el-row>
             <span slot="footer" class="dialog-footer" style="margin-top: 100px;">
-                <el-button @click="showEditDialog = false">取 消</el-button>
+                <el-button @click="closeEdit()">取 消</el-button>
                 <el-button type="primary" @click="save(curtEditRow)">保 存</el-button>
             </span>
         </el-dialog>
@@ -103,20 +103,20 @@
         <el-dialog center title="新增用户关系" :append-to-body="true" :visible.sync="showAddDialog" width="60%"
             :before-close="handleCloseAddDialog">
             <el-table
-                :data="nonRelatedData.slice((addDialog.currentPage - 1) * addDialog.pageSize, addDialog.currentPage * addDialog.pageSize)"
+                :data="curtPageNonRelateData"
                 :border="true" style="width: 100%;height: 60%;">
                 <el-table-column fixed prop="userName" label="用户名称" width="150">
                 </el-table-column>
-                <el-table-column prop="interests" label="喜欢歌曲类型">
-                    <template slot-scope="interestScope">
-                        <el-tag style="margin-left: 2%;margin-top: 2%;"
-                            v-for="item in interestScope.row.interests.split(',')" :key="item">{{
+                <el-table-column prop="interestsSongType" label="喜欢歌曲类型">
+                    <template slot-scope="interestScope" v-if="interestScope.row.interestsSongType">
+                        <el-tag style="margin-left: 2%;margin-top: 2%;" 
+                            v-for="item in interestScope.row.interestsSongType.split(',')" :key="item">{{
                                 item }}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column prop="interestSinger" label="喜欢歌手">
-                    <template slot-scope="interestSingerScope">
-                        <el-tag style="margin-left: 2%;margin-top: 2%;"
+                    <template slot-scope="interestSingerScope" v-if="interestSingerScope.row.interestSinger">     
+                        <el-tag style="margin-left: 2%;margin-top: 2%;" 
                             v-for="item in interestSingerScope.row.interestSinger.split(',')" :key="item">{{
                                 item }}</el-tag>
                     </template>
@@ -124,7 +124,7 @@
                 <el-table-column prop="trustStatus" label="信任状态">
                     <template slot-scope="trustStatusScope">
                         <el-select clearable v-model="trustStatusScope.row.trustStatus"
-                            style="float: left;height: 35px;resize:none;width: 60%;left: 35px;">
+                            style="float: left;height: 35px;resize:none;width: 180px;left: 10px;">
                             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                             </el-option></el-select>
                     </template>
@@ -140,9 +140,9 @@
                 </el-table-column>
             </el-table>
             <div class="block" style="margin-top: 15px;">
-                <el-pagination align="center" @size-change="handleSizeChange" @current-change="handleAddRelateChange"
+                <el-pagination align="center" @size-change="handleAddSizeChange" @current-change="handleAddRelateChange"
                     :current-page="addDialog.currentPage" :page-sizes="[1, 5, 10, 20]" :page-size="addDialog.pageSize"
-                    layout="total, sizes, prev, pager, next, jumper" :total="nonRelatedData.length">
+                    layout="total, sizes, prev, pager, next, jumper" :total="addDialog.total">
                 </el-pagination>
             </div>
             <span slot="footer" class="dialog-footer">
@@ -157,13 +157,14 @@ export default {
     data() {
         return {
             currentPage: 1, // 当前页码
-            total: 20, // 总条数
+            total: 20, // 总条数        
             pageSize: 10, // 每页的数据条数
             searchName: '',
             curtEditRow: {},
             showEditDialog: false,
             showAddDialog: false,
-            nonRelatedData: [{userName:"测试用户99",interests:"欧美,流行,民谣",interestSinger:"张学友,张杰"},{userName:"测试用户108",interests:"欧美,流行,民谣",interestSinger:"xxx"}],
+            allNonRelatedData: [],
+            curtPageNonRelateData: [],
             addDialog: {
                 currentPage: 1, // 当前页码
                 total: 20, // 总条数
@@ -185,35 +186,43 @@ export default {
             }
             ]
             ,
-            tableData: [{userName:"测试用户1",interests:"欧美,流行,民谣",interestSinger:"eminem,Taylor Swift,Charlie Puth"},
-            {userName:"测试用户2",interests:"粤语,电音,轻音乐",trustStatus: 1,interestSinger:"张学友,张国荣"},
-            {userName:"测试用户9",interests:"rap,民谣",trustStatus: 1,interestSinger:"马思维,TY,Jony J"},
-            {userName:"测试用户55",interests:"古风音乐,吉他,日语",trustStatus: -1,interestSinger:"米津玄师,花泽香菜"}],
+            tableData: [],
             curtPageData: [],
         }
     },
     mounted() {
         this.loadUserRlelationShip();
     },
-    methods: {
+        methods: {
+
+            closeEdit() { 
+                showEditDialog = false;
+                this.loadUserRlelationShip();
+            },
         //每页条数改变时触发 选择一页显示多少行
         handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
             this.currentPage = 1;
             this.pageSize = val;
-            // this.curtPageData = 
         },
+        handleAddSizeChange(val) { 
+            console.log(`每页 ${val} 条`);
+            this.addDialog.currentPage = 1;
+            this.addDialog.pageSize = val;
+            this.curtPageNonRelateData = this.allNonRelatedData ? this.allNonRelatedData.slice((this.addDialog.currentPage - 1) * this.addDialog.pageSize, this.addDialog.currentPage * this.addDialog.pageSize) : [];
+        }
+        ,
         //当前页改变时触发 跳转其他页
         handleCurrentChange(val) {
             console.log(`当前页: ${val}`);
             this.currentPage = val;
-            // this.curtPageData = this.tableData ? this.tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize) : []
+            this.curtPageData = this.tableData ? this.tableData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize) : []
         },
         //当前页改变时触发 跳转其他页
         handleAddRelateChange(val) {
-            console.log(`当前页: ${val}`);
+            console.log(`当前页: ${val}`);  
             this.addDialog.currentPage = val;
-            // this.curtPageData = this.tableData ? this.tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize) : []
+            this.curtPageNonRelateData = this.allNonRelatedData ? this.allNonRelatedData.slice((this.addDialog.currentPage - 1) * this.addDialog.pageSize, this.addDialog.currentPage * this.addDialog.pageSize) : []
         },
 
         //编辑当前行数据
@@ -238,8 +247,10 @@ export default {
             this.$axios.post('/api/query_non_related_tableData/',
                 { userId: this.$store.state.user.id })
                 .then(resp => {
-                    this.nonRelatedData = resp.data.allData;
+                    this.allNonRelatedData = resp.data.allData;
+                    console.log('aaa',this.allNonRelatedData);
                     this.addDialog.total = resp.data.total;
+                    this.curtPageNonRelateData = this.allNonRelatedData ? this.allNonRelatedData.slice((this.addDialog.currentPage - 1) * this.addDialog.pageSize, this.addDialog.currentPage * this.addDialog.pageSize) : []
                 })
         },
         deleteItem(row) {
@@ -284,10 +295,12 @@ export default {
             let curtUserId = this.$store.state.user.id;
             this.$axios.post('/api/tableData/',
                 { userId: curtUserId })
-                .then(resp => {
+                .then(resp => { 
                     this.tableData = resp.data.allData;
-                    this.curtPageData = this.tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
-                    this.total = resp.data.total;
+                    if (resp.data.allData) { 
+                        this.curtPageData = this.tableData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize);
+                        this.total = resp.data.total;
+                    }
                 })
         },
         save(curtEditRow) {

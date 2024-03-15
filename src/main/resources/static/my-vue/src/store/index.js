@@ -10,7 +10,7 @@ export default new Vuex.Store(
         username: '',
         tel: '',
         id: '',
-        type: '',
+        isSuperUser: false,
       },
       token: ''
     },
@@ -24,7 +24,7 @@ export default new Vuex.Store(
         console.log('store', userInfo);
         state.user.username = userInfo.userName
         state.user.id = userInfo.userId;
-        state.user.type = userInfo.type;
+        state.user.isSuperUser = userInfo.isSuperUser;
         console.log('state', state.user.id);
       },
     }

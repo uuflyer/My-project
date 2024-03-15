@@ -12,29 +12,29 @@
                 <span style="margin-left: 1%;">歌曲名称：</span>
                 <el-input style="width: 200px;padding-bottom: 2%;" v-model="searchName" placeholder="请输入歌曲名称"></el-input>
                 <el-button style="position: relative;" icon="el-icon-search" circle></el-button>
-                <!-- <el-button type="success" icon="el-icon-plus" style="position:fixed; margin-right: 40px;"
-                @click="showAddDilag()">添加</el-button> -->
+                <el-button type="success" icon="el-icon-plus" style="position:fixed; margin-right: 40px;"
+                @click="showAddDilag()">添加</el-button>
             </el-row>
             
             <el-table
-                :data="this.tableData ? this.tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize) : []"
+                :data="this.tableData ? this.tableData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize) : []"
                 :border="true" 
                 :header-cell-style="rowclass"
                 :cell-style="{borderColor:'#C0C0C0'}"
                 style="width: 100%;border: solid 1px black;left: 5px;">
-                <el-table-column fixed prop="songName" label="歌曲名称" width="150">
+                <el-table-column fixed prop="name" label="歌曲名称" width="150">
                 </el-table-column>
-                <el-table-column prop="type" label="歌曲类型">
-                    <template slot-scope="typeScope">
+                <el-table-column prop="type" label="歌曲类型" >
+                    <template slot-scope="typeScope" v-if="typeScope.row.type">
                         <el-tag style="margin-left: 2%;margin-top: 2%;"
                             v-for="item in typeScope.row.type.split(',')" :key="item">{{
                                 item }}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="typeSinger" label="歌手名称">
-                    <template slot-scope="typeSingerScope">
+                <el-table-column prop="singer" label="歌手名称">
+                    <template slot-scope="singerScope" v-if="singerScope.row.singer">
                         <el-tag style="margin-left: 2%;margin-top: 2%;"
-                            v-for="item in typeSingerScope.row.singer.split(',')" :key="item">{{
+                            v-for="item in singerScope.row.singer.split(',')" :key="item">{{
                                 item }}</el-tag>
                     </template>
                 </el-table-column>
@@ -71,12 +71,12 @@
 
             <el-dialog center title="歌曲评分编辑" :append-to-body="true" :visible="showEditDialog" width="800px"
                 :before-close="handleClose">
-                <el-image :src="`${curtEditRow.picUrl}?param=150y140`" style='margin-left: 35%;width: 230px;height: 250px;'
+                <el-image :src="`${curtEditRow.url}?param=150y140`" style='margin-left: 35%;width: 230px;height: 250px;'
       class="image" lazy />
                 <el-row style="left: 10%;margin-top: 3%;">
                     <span style="float: left; height: 35px;line-height: 35px;width: 20%;">歌曲名称：
                     </span>
-                    <el-input style="float: left;height: 35px;resize:none;width: 60%;" v-model="curtEditRow.songName"
+                    <el-input style="float: left;height: 35px;resize:none;width: 60%;" v-model="curtEditRow.name"
                         disabled></el-input>
                 </el-row>
                 <el-row style="left: 10%;margin-top: 3%;">
@@ -101,46 +101,56 @@
                 </el-row>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="showEditDialog = false">取 消</el-button>
-                    <el-button type="primary" @click="save(curtEditRow)">保 存</el-button>
+                    <el-button type="primary" @click="updateRate(curtEditRow)">保 存</el-button>
                 </span>
             </el-dialog>
 
-        <el-dialog center title="新增用户信息" :append-to-body="true" :visible.sync="showAddDialog" width="60%"
+        <el-dialog center title="新增歌曲评分" :append-to-body="true" :visible.sync="showAddDialog" width="60%"
             :before-close="handleCloseAddDialog">
             <el-table
-                :data="nonRelatedData.slice((addDialog.currentPage - 1) * addDialog.pageSize, addDialog.currentPage * addDialog.pageSize)"
+                :data="noRateSong.slice((this.addDialog.currentPage - 1) * this.addDialog.pageSize, this.addDialog.currentPage * this.addDialog.pageSize)"
                 :border="true" style="width: 100%;height: 60%;">
-                <el-table-column fixed prop="songName" label="用户名称" width="150">
+                <el-table-column fixed prop="name" label="歌曲名称" width="150">
                 </el-table-column>
-                <el-table-column prop="type" label="喜欢歌曲类型">
+                <el-table-column prop="type" label="歌曲类型" fixed width="200">
                     <template slot-scope="typeScope">
                         <el-tag style="margin-left: 2%;margin-top: 2%;"
                             v-for="item in typeScope.row.type.split(',')" :key="item">{{
                                 item }}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="trustStatus" label="信任状态">
-                    <template slot-scope="trustStatusScope">
-                        <el-select clearable v-model="trustStatusScope.row.trustStatus"
-                            style="float: left;height: 35px;resize:none;width: 60%;left: 35px;">
-                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                            </el-option></el-select>
+                <el-table-column prop="singer" label="歌手名称" fixed width="180">
+                    <template slot-scope="typeScope">
+                        <el-tag style="margin-left: 2%;margin-top: 2%;"
+                            v-for="item in typeScope.row.singer.split(',')" :key="item">{{
+                                item }}</el-tag>
                     </template>
-
+                </el-table-column>
+                <el-table-column prop="rate" label="歌曲评分">
+                    <template slot-scope="rateScope">
+                        <el-rate 
+                            show-score
+                            allow-half
+                            v-model="rateScope.row.rate"
+                            score-template="{value}"
+                            text-color="#ff9900"
+                            :colors=colors>
+                            </el-rate>
+                    </template>
                 </el-table-column>
 
                 <el-table-column fixed="right" label="操作">
                     <template slot-scope="scope">
-                        <el-tooltip class="item" effect="dark" content="增加关系" placement="top">
-                            <el-button type="primary" @click="addRelateShip(scope.row)" icon="el-icon-plus"
+                        <el-tooltip class="item" effect="dark" content="增加歌曲评分" placement="top">
+                            <el-button type="primary" @click="addRateSong(scope.row)" icon="el-icon-plus"
                                 circle></el-button> </el-tooltip>
                     </template>
                 </el-table-column>
             </el-table>
             <div class="block" style="margin-top: 15px;">
-                <el-pagination align="center" @size-change="handleSizeChange" @current-change="handleAddRelateChange"
+                <el-pagination align="center" @size-change="handleAddSizeChange" @current-change="handleAddRelateChange"
                     :current-page="addDialog.currentPage" :page-sizes="[1, 5, 10, 20]" :page-size="addDialog.pageSize"
-                    layout="total, sizes, prev, pager, next, jumper" :total="nonRelatedData.length">
+                    layout="total, sizes, prev, pager, next, jumper" :total="noRateSong.length">
                 </el-pagination>
             </div>
             <span slot="footer" class="dialog-footer">
@@ -161,11 +171,12 @@ export default {
             curtEditRow: {},
             showEditDialog: false,
             showAddDialog: false,
-            nonRelatedData: [],
+            noRateSong: [],
             addDialog: {
                 currentPage: 1, // 当前页码
                 total: 20, // 总条数
                 pageSize: 5, // 每页的数据条数
+                curtPageData: [],
 
             },
             colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
@@ -184,21 +195,12 @@ export default {
             }
             ]
             ,
-            tableData: [{songName:"1989",type:"欧美,流行",picUrl: require('@/music/all/1989.jpg'),singer:"Taylor Swift",rate: 3.7},
-            {songName:"Lose Yourself",picUrl: require('@/music/all/lose yourself.jpg'),type:"Rap,欧美,流行",singer:"Eminem",rate: 2.5},
-            {songName:"Rap God",type:"Rap,欧美,流行",picUrl: require('@/music/all/rap god.jpg'),singer:"Eminem",rate: 4.8},
-            {songName:"黑马王子",type:"Rap,中文说唱",picUrl: require('@/music/all/黑马王子.jpg'),singer:"马思唯",rate: 4.3},
-            {songName:"南方姑娘",type:"民谣,中文",picUrl: require('@/music/all/南方姑娘.jpg'),singer:"赵雷",rate: 3},
-            {songName:"启示录",type:"中文,流行",picUrl: require('@/music/all/启示录.jpg'),singer:"邓紫棋",rate: 3},
-            {songName:"她说",type:"中文,流行",picUrl: require('@/music/all/她说.jpg'),singer:"林俊杰",rate: 4.1},
-            {songName:"吻别",type:"怀旧,情歌,中文",picUrl: require('@/music/all/吻别.jpg'),singer:"张学友",rate: 3},    
-            {songName:"我是如此相信",type:"中文,流行",picUrl: require('@/music/all/我是如此相信.jpg'),singer:"周杰伦",rate: 3.6},
-            {songName:"生命因你而火热",type:"摇滚,中文",picUrl: require('@/music/all/生命因你而火热.jpg'),singer:"新裤子",rate: 4}],
+            tableData: [],
             curtPageData: [],
         }
     },
     mounted() {
-        this.loadUserRlelationShip();
+        this.loadAllRatedSongInfo();
     },
     methods: {
         //每页条数改变时触发 选择一页显示多少行
@@ -206,19 +208,27 @@ export default {
             console.log(`每页 ${val} 条`);
             this.currentPage = 1;
             this.pageSize = val;
-            // this.curtPageData = 
+           this.curtPageData = this.tableData ? this.tableData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize) : []
         },
         //当前页改变时触发 跳转其他页
         handleCurrentChange(val) {
             console.log(`当前页: ${val}`);
             this.currentPage = val;
-            // this.curtPageData = this.tableData ? this.tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize) : []
+            this.curtPageData =  this.tableData ? this.tableData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize) : []
+        },
+
+        //每页条数改变时触发 选择一页显示多少行
+        handleAddSizeChange(val) {
+            console.log(`每页 ${val} 条`);
+            this.addDialog.currentPage = 1;
+            this.addDialog.pageSize = val;
+            this.addDialog.curtPageData = this.noRateSong ? this.noRateSong.slice((this.addDialog.currentPage - 1) * this.addDialog.pageSize, this.addDialog.currentPage * this.addDialog.pageSize) : []
         },
         //当前页改变时触发 跳转其他页
         handleAddRelateChange(val) {
             console.log(`当前页: ${val}`);
             this.addDialog.currentPage = val;
-            // this.curtPageData = this.tableData ? this.tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize) : []
+            this.addDialog.curtPageData = this.noRateSong ? this.noRateSong.slice((this.addDialog.currentPage - 1) * this.addDialog.pageSize, this.addDialog.currentPage * this.addDialog.pageSize) : []
         },
 
         //编辑当前行数据
@@ -236,27 +246,27 @@ export default {
             this.showAddDialog = false;
         },
         showAddDilag() {
-            this.loadNonRelateData();
+            this.loadNoRateSongInfo();
             this.showAddDialog = true;
         },
-        loadNonRelateData() {
-            this.$axios.post('/api/query_non_related_tableData/',
-                { userId: this.$store.state.user.id })
+        loadNoRateSongInfo() {
+            this.$axios.post('/api/unratedMusic/',
+                { userId: this.$store.state.user.id,pageSize: this.addDialog.pageSize,offset:(this.addDialog.currentPage - 1)*this.addDialog.pageSize })
                 .then(resp => {
-                    this.nonRelatedData = resp.data.allData;
+                    this.noRateSong = resp.data.allData;
                     this.addDialog.total = resp.data.total;
                 })
         },
         deleteItem(row) {
 
-            this.$confirm('是否确认删除当前歌曲信息?', '提示', {
+            this.$confirm('是否确认删除当前歌曲评分信息?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() =>{
             let curtUserId = this.$store.state.user.id;
-            this.$axios.post('/api/delete_tableData/',
-                { primaryUserId: curtUserId, friendUserId: row.id })
+            this.$axios.post('/api/delMusicRate/',
+                { userId: curtUserId, rateId: row.rateId })
                 .then(resp => {
                     if (resp && resp.data.status === 'success') {
                         this.$message({
@@ -264,7 +274,7 @@ export default {
                             type: 'success'
                         });
                         console.log('delete', resp);
-                        this.loadUserRlelationShip();
+                        this.loadAllRatedSongInfo();
                     } else {
                         this.$message.error('删除失败！');
                     }
@@ -272,42 +282,48 @@ export default {
             let filter = this.tableData.filter((val) => val.name !== row.name);
             this.$set(this, 'tableData', filter);})
         },
-        addRelateShip(rowData) {
-            let param = { primaryUserId: this.$store.state.user.id, friendUserId: rowData.id, trustStatus: rowData.trustStatus };
-            this.$axios.post('/api/add_tableData/',
+        addRateSong(rowData) {
+            let param = { userId: this.$store.state.user.id, songId: rowData.id, rate: rowData.rate };
+            this.$axios.post('/api/saveMusicRate/',
                 param)
                 .then(resp => {
                     if (resp && resp.data.status === 'success') {
                         this.$message({
-                            message: '新增关系成功！',
+                            message: '新增歌曲评分成功！',
                             type: 'success'
                         });
                         console.log('rrrttttt', resp);
-                        this.loadNonRelateData();
-                        this.loadUserRlelationShip();
+                        this.loadNoRateSongInfo();
+                        this.loadAllRatedSongInfo();
                     } else {
-                        this.$message.error('新增关系失败！');
+                        this.$message.error('新增歌曲评分失败！');
                     }
 
                 })
         },
-        loadUserRlelationShip() {
+        loadAllRatedSongInfo() {
             let curtUserId = this.$store.state.user.id;
-            this.$axios.post('/api/tableData/',
-                { userId: curtUserId })
+            this.$axios.post('/api/ratedMusic/',
+                { userId: curtUserId,pageSize:this.pageSize,offset:(this.currentPage - 1) * this.pageSize })
                 .then(resp => {
                     this.tableData = resp.data.allData;
-                    this.curtPageData = this.tableData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+                    if (this.tableData) { 
+                        this.tableData.forEach(element => {
+                            element.url = require('@/music/音乐数据集图片/'+element.url)
+                        });
+                        console.log('allRatedMusic',this.tableData);
+                    }
+                    this.curtPageData = this.tableData.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize);
                     this.total = resp.data.total;
                 })
         },
-        save(curtEditRow) {
+        updateRate(curtEditRow) {
             let param = {
-                primaryUserId: this.$store.state.user.id,
-                friendUserId: curtEditRow.id,
-                trustStatus: curtEditRow.trustStatus
+                userId: this.$store.state.user.id,
+                rateId: curtEditRow.rateId,
+                rate: curtEditRow.rate
             };
-            this.$axios.post('/api/update_tableData/',
+            this.$axios.post('/api/updateMusicRate/',
                 param)
                 .then(resp => {
                     if (resp && resp.data.status === 'success') {
@@ -315,9 +331,8 @@ export default {
                             message: '保存成功！',
                             type: 'success'
                         });
-                        console.log('rrrttttt', resp);
                         this.showEditDialog = false
-                        this.loadUserRlelationShip();
+                        this.loadAllRatedSongInfo();
                     } else {
                         this.$message.error('保存失败！');
                     }

@@ -6,7 +6,6 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import store from './store'
-import movieItem from '@/components/common/movieItem.vue'
 
 var axios = require('axios')
 axios.defaults.baseURL = "http://127.0.0.1:8000"
@@ -16,7 +15,6 @@ Vue.prototype.$axios = axios
 Vue.config.productionTip = false
 /* eslint-disable no-new */
 
-Vue.component('movieItem', movieItem);
 Vue.use(ElementUI)
 
 

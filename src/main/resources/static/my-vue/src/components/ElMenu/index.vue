@@ -43,7 +43,7 @@ export default {
   mounted() {
     // 获取所有定义的一级菜单和多级菜单
     
-    if(this.$store.state.user.type === 'admin'){
+    if(this.$store.state.user.isSuperUser){
       this.routersList = routers.options.routes[0].children;
     }else{
      const menus = routers.options.routes[0].children;

@@ -24,8 +24,6 @@
           </el-button>
         <hr color="#C20C0C" style="margin-bottom: 20px" />
         <Playlists></Playlists>
-        <!-- 新碟上架 -->
-        <!-- <NewestAlbum :newestAlbum="newestAlbum" /> -->
         <!-- 榜单 -->
         <Hotlist />
       </div>
@@ -46,9 +44,7 @@ export default {
   components: {NewestAlbum, Playlists, Right, Hotlist },
   data() {
     return {
-      banners: [{imageUrl:require("@/music/1.jpg")},{imageUrl:require('@/music/2.jpg')},
-      {imageUrl:require('@/music/3.jpg')},{imageUrl:require('@/music/4.jpg')},
-      {imageUrl:require('@/music/5.jpg')}],
+      banners: [],
       swiperOptions: {
         initialSlide: 0,
         slidesPerView: 5,
@@ -65,27 +61,27 @@ export default {
   },
   mounted() {
     // 获取轮播图数据
-    // this.$API.getBanner().then((res) => {
-    //   if (res.status === 200) {
-    //     this.banners = res.data.banners;
-    //   }
-    // });
-
-    // // 新碟上架
-    // this.$API.albumNewest().then((res) => {
-    //   if (res.data.code === 200) {
-    //     this.newestAlbum = res.data.albums.splice(0,10);
-    //   }
-    // });
-
+    this.getBanner();
   },
   methods: {
     changeMusiclist(list) {
       this.$bus.$emit("changeMusiclist", list);
     },
+    getBanner() { 
+      this.$axios.post('/api/Hot/')
+        .then(resp => {
+          console.log('hot',resp);
+          if (resp) {
+            resp.data.forEach(element => {
+              this.banners.push({ imageUrl: require('@/music/音乐数据集图片/'+element.url) });
+            })
+          }
+        }
+        )
+    }
   },
 };
-</script>
+</script>   
 
 <style scoped lang='less'>
 .el-carousel {

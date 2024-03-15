@@ -1,6 +1,6 @@
 <template>
   <el-card :body-style="{ padding: '0px' }" class="playcard" >
-    <el-image :src="`${data.picUrl || data.coverImgUrl}?param=150y140`" style='width: 160px;height: 140px;'
+    <el-image :src="`${data.url || data.coverImgUrl}?param=150y140`" style='width: 160px;height: 140px;'
       class="image" lazy />
     <div style="padding: 6px">
       <div class="bottom">
@@ -8,7 +8,7 @@
         <el-button type="text" icon="el-icon-video-play" @click.stop="changeMusiclist"></el-button>
       </div>
       <a class="title"><strong>{{ data.name }}</strong></a>
-      <a class="title">歌手：{{ data.singerName }}</a>
+      <a class="title">歌手：{{ data.singer }}</a>
     </div>
   </el-card>
 </template>
